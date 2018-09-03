@@ -5,8 +5,11 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 // Variables
-const outputDir = path.resolve(__dirname, 'build');
-const indexFile = path.resolve(__dirname, 'public', 'index.html');
+const outputDir = 'build';
+const publicDir = 'public';
+const outputPath = path.resolve(__dirname, outputDir);
+const indexFile = path.resolve(__dirname, publicDir, 'index.html');
+const favIconFile = path.resolve(__dirname, publicDir, 'favicon.ico');
 
 module.exports = {
     entry: {
@@ -14,7 +17,7 @@ module.exports = {
         vendor: ['react', 'react-dom']
     },
     output: {
-        path: outputDir,
+        path: outputPath,
         filename: 'main.bundle.js'
     },
     devtool: 'source-map',
@@ -34,6 +37,13 @@ module.exports = {
             }
         ]
     },
+    devServer: {
+        port: 3000,
+        open: true,
+        proxy: {
+            "/api": "http://localhost:8080"
+        }
+    },
     plugins: [
         new webpack.EnvironmentPlugin({
             NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
@@ -42,7 +52,8 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new WebpackCleanupPlugin(),
         new HtmlWebpackPlugin({
-            template: indexFile
+            template: indexFile,
+            favicon: favIconFile
         })
     ]
 }

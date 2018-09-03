@@ -15,7 +15,8 @@
   ],
   "scripts": {
     "start": "webpack-dev-server --mode development --hot --progress --color --port 3000 --open",
-    "build": "webpack -p --progress --colors"
+    "build": "webpack -p --progress --colors",
+    "dev-server": "nodemon ./src/server/index.js localhost 8080"
   },
   "dependencies": {
     "express": "^4.16.3",
@@ -36,6 +37,8 @@
     "css-loader": "^1.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "nodemon": "^1.18.4",
+    "react-hot-loader": "^4.3.5",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.0",
     "ts-loader": "^5.0.0",
@@ -45,6 +48,8 @@
     "webpack": "^4.17.1",
     "webpack-cleanup-plugin": "^0.5.1",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.7"
+    "webpack-dev-middleware": "^3.2.0",
+    "webpack-dev-server": "^3.1.7",
+    "webpack-hot-middleware": "^2.23.1"
   }
 }
