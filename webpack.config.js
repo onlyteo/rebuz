@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 // Variables
-const outputDir = 'build';
+const outputDir = 'dist';
 const publicDir = 'public';
 const outputPath = path.resolve(__dirname, outputDir);
 const indexFile = path.resolve(__dirname, publicDir, 'index.html');
@@ -20,7 +20,6 @@ module.exports = {
         path: outputPath,
         filename: 'main.bundle.js'
     },
-    devtool: 'source-map',
     resolve: {
         extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
     },
@@ -31,17 +30,18 @@ module.exports = {
                 loader: 'ts-loader'
             },
             {
-                enforce: "pre",
+                enforce: 'pre',
                 test: /\.js$/,
-                loader: "source-map-loader"
+                loader: 'source-map-loader'
             }
         ]
     },
+    devtool: 'source-map',
     devServer: {
         port: 3000,
         open: true,
         proxy: {
-            "/api": "http://localhost:8080"
+            '/api': 'http://localhost:8080'
         }
     },
     plugins: [

@@ -14,12 +14,16 @@
     "webpack"
   ],
   "scripts": {
-    "start": "webpack-dev-server --mode development --hot --progress --color --port 3000 --open",
+    "clean": "rm -rf ./dist",
     "build": "webpack -p --progress --colors",
-    "dev-server": "nodemon ./src/server/index.js localhost 8080"
+    "dev-client": "webpack-dev-server --mode development --hot --progress --color --port 3000 --open",
+    "dev-server": "nodemon ./src/server/index.js 8080",
+    "dev-start": "concurrently \"yarn dev-server\" \"yarn dev-client\""
   },
   "dependencies": {
+    "concurrently": "^4.0.1",
     "express": "^4.16.3",
+    "minimist": "^1.2.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",
@@ -34,22 +38,15 @@
     "@types/react-dom": "^16.0.7",
     "@types/react-router-redux": "^5.0.15",
     "@types/redux-actions": "^2.3.0",
-    "css-loader": "^1.0.0",
-    "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "nodemon": "^1.18.4",
-    "react-hot-loader": "^4.3.5",
     "source-map-loader": "^0.2.4",
-    "style-loader": "^0.23.0",
     "ts-loader": "^5.0.0",
     "tslint": "^5.11.0",
     "typescript": "^3.0.3",
-    "url-loader": "^1.1.1",
     "webpack": "^4.17.1",
     "webpack-cleanup-plugin": "^0.5.1",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-middleware": "^3.2.0",
-    "webpack-dev-server": "^3.1.7",
-    "webpack-hot-middleware": "^2.23.1"
+    "webpack-dev-server": "^3.1.7"
   }
 }
