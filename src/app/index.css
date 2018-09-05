@@ -3,3 +3,19 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.ui.container {
+  background-color: #ededed;
+}
+
+.ui.header {
+  padding: 0.5rem 1rem;
+}
+
+.ui.vertical.segment {
+  padding: 0.5rem 1rem;
+}
+
+.ui.vertical.segment:last-child {
+  padding-bottom: 3rem;
+}
