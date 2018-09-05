@@ -1,8 +1,18 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import App from './components/home';
+
+import { Routes } from './core';
+
+import 'semantic-ui-css/semantic.min.css';
+import './index.css';
+
+function Root() {
+    return (
+        <Routes />
+    );
+}
 
 render(
-    <App message="Rebuz" />,
+    <Root />,
     document.getElementById('root'),
 );

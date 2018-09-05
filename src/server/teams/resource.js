@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     const code = req.query.code;
-    console.log(code);
     res.send(repository.find(code));
 })
 
