@@ -2,14 +2,16 @@ import * as React from 'react';
 import { Route, Router, Switch } from 'react-router';
 
 import { createHistory } from './';
-import { NotFound } from '../containers/error';
-import Home from '../containers/home';
+import { NotFoundContainer } from '../containers/error';
+import { HomeContainer } from '../containers/home';
+import { EventContainerConnected } from '../containers/event';
 
 const Routes = () => (
     <Router history={createHistory()}>
         <Switch>
-            <Route path="/" exact={true} component={Home} />
-            <Route component={NotFound} />
+            <Route path="/event" component={EventContainerConnected} />
+            <Route path="/" exact component={HomeContainer} />
+            <Route path="*" component={NotFoundContainer} />
         </Switch>
     </Router>
 );

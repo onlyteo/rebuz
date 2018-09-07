@@ -1,30 +1,34 @@
-import { Event } from "../models";
+import { EventResponse } from "../models";
 
-export enum ActionType {
-    GET = '[events] GET',
-    FIND = '[events] FIND'
+export enum FindEventsActionType {
+    LOADING = '[events] FIND LOADING',
+    SUCCESS = '[events] FIND SUCCESS',
+    ERROR = '[events] FIND ERROR'
 }
 
-export interface GetAction { type: ActionType.GET, payload: Event }
-export interface FindAction { type: ActionType.FIND, payload: Array<Event> }
+export interface FindEventsLoadingAction { type: FindEventsActionType.LOADING, loading: boolean }
+export interface FindEventsSuccessAction { type: FindEventsActionType.SUCCESS, payload: EventResponse[] }
+export interface FindEventsErrorAction { type: FindEventsActionType.ERROR, error: any }
 
-export function get(id: number): GetAction {
-    return {
-        type: ActionType.GET,
-        payload: {
-            id: 0,
-            code: '',
-            name: '',
-            teams: []
-        }
+export type FindEventsAction = FindEventsLoadingAction | FindEventsSuccessAction | FindEventsErrorAction;
+
+const findEventsLoading = (loading: boolean): FindEventsLoadingAction => ({ type: FindEventsActionType.LOADING, loading });
+const findEventsSuccess = (payload: EventResponse[]): FindEventsSuccessAction => ({ type: FindEventsActionType.SUCCESS, payload });
+const findEventsError = (error: any): FindEventsErrorAction => ({ type: FindEventsActionType.ERROR, error });
+
+export function findEvents(code: string) {
+    return (dispatch) => {
+        dispatch(findEventsLoading(true));
+        return Api.get(`/api/find?code=${code}`)
+            .then(response => {
+                return dispatch(findEventsSuccess(response));
+            })
+            .catch((error) => {
+                return dispatch(findEventsError(error));
+            });
     }
 }
 
-export function find(code?: string): FindAction {
-    return {
-        type: ActionType.FIND,
-        payload: []
-    }
+declare const Api: {
+    get: (url: string) => Promise<EventResponse[]>;
 }
-
-export type EventAction = GetAction | FindAction

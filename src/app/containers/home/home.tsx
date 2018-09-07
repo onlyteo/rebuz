@@ -4,7 +4,11 @@ import { Button, Container, Header, Icon, Input, Segment } from 'semantic-ui-rea
 
 import './home.css';
 
-class Home extends Component {
+interface ComponentProps {
+  code?: string;
+}
+
+class HomeContainer extends Component<ComponentProps> {
 
   public render(): ReactNode {
 
@@ -15,13 +19,17 @@ class Home extends Component {
         </Header>
         <Segment vertical>
           <Input placeholder='Enter event code...' />
-          <Button icon color='blue'>
+          <Button icon color='blue' onClick={this.handleClick}>
             <Icon name='arrow right' />
           </Button>
         </Segment>
       </Container>
     );
   }
+
+  private handleClick = (e, { name }) => {
+
+  }
 }
 
-export default Home;
+export { HomeContainer };

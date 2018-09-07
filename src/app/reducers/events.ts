@@ -1,29 +1,24 @@
-import { Event } from "../models";
-import { EventAction, EventActionType } from "../actions";
+import { EventResponse } from "../models";
+import { FindEventsAction, FindEventsActionType } from "../actions";
 
-export interface EventState {
-    events: Event[]
+export interface State {
+    loading: boolean
+    events: EventResponse[]
 }
 
-export const initialEventState: EventState = {
+export const initialState: State = {
+    loading: false,
     events: []
 }
 
-export function reducer(state: EventState = initialEventState, action: EventAction) {
+export function find(state: State = initialState, action: FindEventsAction) {
     switch (action.type) {
-        case EventActionType.GET: {
-            return {
-                ...state
-            }
+        case FindEventsActionType.LOADING: {
+            return { ...state, loading: action.loading };
         }
 
-        case EventActionType.FIND: {
-            const events = action.payload
-
-            return {
-                ...state,
-                events: [...state.events, events]
-            }
+        case FindEventsActionType.SUCCESS: {
+            return { ...initialState, events: action.payload }
         }
 
         default: {

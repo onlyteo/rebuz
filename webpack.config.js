@@ -16,7 +16,7 @@ const favIconFile = path.resolve(__dirname, publicDir, 'favicon.ico');
 module.exports = {
     entry: {
         app: ['./src/app/index.tsx'],
-        vendor: ['react', 'react-dom']
+        vendor: ['react', 'react-dom', 'react-router', 'redux', 'react-redux', 'redux-thunk']
     },
     output: {
         path: outputPath,
@@ -83,6 +83,7 @@ module.exports = {
     devServer: {
         port: 3000,
         open: true,
+        historyApiFallback: true,
         proxy: {
             '/api': 'http://localhost:8080'
         }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 
-class NotFound extends Component {
+class NotFoundContainer extends Component {
     public render(): ReactNode {
         return (
             <div className="error error-not-found">
@@ -11,4 +11,4 @@ class NotFound extends Component {
     }
 }
 
-export { NotFound };
+export { NotFoundContainer };

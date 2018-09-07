@@ -1,3 +1,3 @@
-export * from './event';
-export * from './location';
-export * from './team';
+export * from './events';
+export * from './locations';
+export * from './teams';
