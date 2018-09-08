@@ -1,4 +1,6 @@
-import { EventResponse } from "../models";
+import axios from 'axios';
+
+import { EventResponse } from "../../models";
 
 export enum FindEventsActionType {
     LOADING = '[events] FIND LOADING',
@@ -19,16 +21,12 @@ const findEventsError = (error: any): FindEventsErrorAction => ({ type: FindEven
 export function findEvents(code: string) {
     return (dispatch) => {
         dispatch(findEventsLoading(true));
-        return Api.get(`/api/find?code=${code}`)
-            .then(response => {
-                return dispatch(findEventsSuccess(response));
+        return axios.get(`/api/events?code=A2zXvZ`)
+            .then((response) => {
+                return dispatch(findEventsSuccess(response.data));
             })
             .catch((error) => {
                 return dispatch(findEventsError(error));
             });
     }
-}
-
-declare const Api: {
-    get: (url: string) => Promise<EventResponse[]>;
 }

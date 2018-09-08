@@ -1,4 +1,4 @@
-import { EventResponse } from "../models";
+import { EventResponse } from "../../models";
 import { FindEventsAction, FindEventsActionType } from "../actions";
 
 export interface State {
@@ -11,7 +11,7 @@ export const initialState: State = {
     events: []
 }
 
-export function find(state: State = initialState, action: FindEventsAction) {
+export function find(state: State = initialState, action: FindEventsAction): State {
     switch (action.type) {
         case FindEventsActionType.LOADING: {
             return { ...state, loading: action.loading };

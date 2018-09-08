@@ -21,6 +21,7 @@
     "dev-start": "concurrently \"yarn dev-server\" \"yarn dev-client\""
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "concurrently": "^4.0.1",
     "express": "^4.16.3",
     "history": "^4.7.2",

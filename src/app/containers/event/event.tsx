@@ -5,8 +5,8 @@ import { push, RouterAction } from 'react-router-redux';
 import { Container, Header, Icon, Segment } from 'semantic-ui-react'
 
 import { EventResponse } from "../../models";
-import { RootState } from '../../reducers';
-import { findEvents } from '../../actions';
+import { RootState } from '../../state/types';
+import { findEvents } from '../../state/actions';
 
 import './event.css';
 
@@ -32,8 +32,6 @@ class EventContainer extends Component<ComponentProps> {
   }
 
   componentDidUpdate() {
-    const { code } = this.props.match.params
-    this.props.findEvents(code);
   }
 
   public render(): ReactNode {
