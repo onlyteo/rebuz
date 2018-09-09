@@ -1,6 +1,5 @@
 export interface Team {
-    id: number,
-    code: string,
+    id: string,
     name: string,
-    locations: number[]
+    questions: string[]
 }

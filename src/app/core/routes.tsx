@@ -9,7 +9,7 @@ import { EventContainerConnected } from '../containers/event';
 const Routes = () => (
     <Router history={createHistory()}>
         <Switch>
-            <Route path="/event" component={EventContainerConnected} />
+            <Route path="/event/:id?" component={EventContainerConnected} />
             <Route path="/" exact component={HomeContainer} />
             <Route path="*" component={NotFoundContainer} />
         </Switch>

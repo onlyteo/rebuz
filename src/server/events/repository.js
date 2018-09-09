@@ -1,29 +1,25 @@
 
 const entities = [
     {
-        id: 1,
-        code: 'A2zXvZ',
-        name: 'My Event',
-        teams: [1, 2, 3, 4]
+        id: 'A2zXvZ',
+        name: 'Målfrid\'s rebuz',
+        teams: [
+            'ch3x00',
+            'kHcd7G',
+            '8BhSgB',
+            'j0J2bn'
+        ]
     }
 ]
 
-exports.find = (code) => {
-    if (code) {
-        return entities.filter(entity => entity.code == code);
+exports.find = (team) => {
+    if (team) {
+        return entities.filter(e => e.teams.find(t => t == team));
     } else {
-        return entities;
+        return [];
     }
 }
 
 exports.get = (id) => {
-    let entity = undefined;
-
-    entities.forEach(e => {
-        if (e.id == id) {
-            entity = e;
-        }
-    });
-
-    return entity;
+    return entities.find(e => e.id == id);
 };

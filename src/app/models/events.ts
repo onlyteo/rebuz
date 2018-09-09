@@ -1,13 +1,11 @@
 export interface Event {
-    id: number,
-    code: string,
+    id: string,
     name: string,
-    teams: number[]
+    teams: string[]
 }
 
 export interface EventResponse {
-    id: number,
-    code: string,
+    id: string,
     name: string,
-    teams: number[]
+    teams: string[]
 }

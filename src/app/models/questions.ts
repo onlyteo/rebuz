@@ -1,13 +1,13 @@
-export interface Alternative {
-    id: number,
+export interface Answer {
+    id: string,
     answer: string
 }
 
 export interface Location {
-    id: number,
+    id: string,
     name: string,
     description: string,
     question: string,
-    alternatives: Alternative[],
+    answers: Answer[],
     answer: number
 }

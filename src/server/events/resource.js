@@ -6,8 +6,8 @@ const repository = require('./repository')
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    const code = req.query.code;
-    res.send(repository.find(code));
+    const team = req.query.team;
+    res.send(repository.find(team));
 })
 
 router.get('/:id', (req, res) => {

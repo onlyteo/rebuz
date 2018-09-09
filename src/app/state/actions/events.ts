@@ -18,10 +18,10 @@ const findEventsLoading = (loading: boolean): FindEventsLoadingAction => ({ type
 const findEventsSuccess = (payload: EventResponse[]): FindEventsSuccessAction => ({ type: FindEventsActionType.SUCCESS, payload });
 const findEventsError = (error: any): FindEventsErrorAction => ({ type: FindEventsActionType.ERROR, error });
 
-export function findEvents(code: string) {
+export function findEvents(id: string) {
     return (dispatch) => {
         dispatch(findEventsLoading(true));
-        return axios.get(`/api/events?code=A2zXvZ`)
+        return axios.get(`/api/events?team=${id}`)
             .then((response) => {
                 return dispatch(findEventsSuccess(response.data));
             })

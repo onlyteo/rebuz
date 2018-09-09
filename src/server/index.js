@@ -3,7 +3,7 @@ const express = require('express');
 const minimist = require('minimist');
 const events = require('./events/resource')
 const teams = require('./teams/resource')
-const locations = require('./locations/resource')
+const questions = require('./questions/resource')
 // Variables
 const server = express();
 const isProduction = process.env.NODE_ENV === 'production';
@@ -18,7 +18,7 @@ if (isProduction) {
 // Configure backend
 server.use('/api/events', events);
 server.use('/api/teams', teams);
-server.use('/api/locations', locations);
+server.use('/api/questions', questions);
 // Default route
 server.use((req, res) => {
     res.status(404).send();

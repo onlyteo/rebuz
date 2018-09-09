@@ -5,11 +5,6 @@ const repository = require('./repository')
 // Variables
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    const code = req.query.code;
-    res.send(repository.find(code));
-})
-
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     if (!id) {

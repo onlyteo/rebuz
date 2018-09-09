@@ -19,8 +19,9 @@ module.exports = {
         vendor: ['react', 'react-dom', 'react-router', 'redux', 'react-redux', 'redux-thunk']
     },
     output: {
+        filename: 'main.bundle.js',
         path: outputPath,
-        filename: 'main.bundle.js'
+        publicPath: '/'
     },
     resolve: {
         extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
