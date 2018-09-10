@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom'
 import { push, RouterAction } from 'react-router-redux';
-import { Container, Header, Icon, Segment } from 'semantic-ui-react'
+import { Container, Icon, Message, Segment } from 'semantic-ui-react'
 
+import { HeaderComponent } from '../../components/header';
 import { EventResponse } from "../../models";
 import { RootState } from '../../state/types';
 import { findEvents } from '../../state/actions';
@@ -48,14 +50,12 @@ class EventContainer extends Component<ComponentProps> {
         content = <h3>Event: {events && events.length && events[0].name}</h3>;
       }
     } else {
-      content = <h3>No event code selected</h3>;
+      content = <Message warning>No event code selected.<br /><Link to='/'><Icon name='home' />Go to home page</Link></Message>;
     }
 
     return (
       <Container>
-        <Header as='h1'>
-          <Icon name='map' />Rebuz - Event
-        </Header>
+        <HeaderComponent subtitle='Event' />
         <Segment vertical>
           {content}
         </Segment>
