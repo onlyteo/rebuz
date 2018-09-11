@@ -4,6 +4,10 @@ const entities = [
         id: 'ch3x00',
         name: 'Red',
         questions: [
+            '5oCnKZ',
+            'S0Cl65',
+            '9vr7DR',
+            'msNR2Y'
         ]
     },
     {

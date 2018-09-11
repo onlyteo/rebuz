@@ -2,55 +2,55 @@
 const entities = [
     {
         id: '5oCnKZ',
+        type: 'NORMAL',
         details: 'Gå til Meny',
         question: '?',
-        type: 'NORMAL',
         answers: [
             {
                 id: '7cZHWF',
                 answer: ''
             }
         ],
-        answer: '7cZHWF'
+        answerId: '7cZHWF'
     },
     {
         id: 'S0Cl65',
+        type: 'NORMAL',
         details: 'Gå til Meny',
         question: '?',
-        type: 'NORMAL',
         answers: [
             {
                 id: '7cZHWF',
                 answer: ''
             }
         ],
-        answer: '7cZHWF'
+        answerId: '7cZHWF'
     },
     {
         id: '9vr7DR',
+        type: 'NORMAL',
         details: 'Gå til Meny',
         question: '?',
-        type: 'NORMAL',
         answers: [
             {
                 id: '7cZHWF',
                 answer: ''
             }
         ],
-        answer: '7cZHWF'
+        answerId: '7cZHWF'
     },
     {
         id: 'msNR2Y',
+        type: 'NORMAL',
         details: 'Gå til Meny',
         question: '?',
-        type: 'NORMAL',
         answers: [
             {
                 id: '7cZHWF',
                 answer: ''
             }
         ],
-        answer: '7cZHWF'
+        answerId: '7cZHWF'
     }
 ]
 
