@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { EventResponse } from "../../models";
+import { Event } from "../../models";
 
 export enum FindEventsActionType {
     LOADING = '[events] FIND LOADING',
@@ -9,13 +9,13 @@ export enum FindEventsActionType {
 }
 
 export interface FindEventsLoadingAction { type: FindEventsActionType.LOADING, loading: boolean }
-export interface FindEventsSuccessAction { type: FindEventsActionType.SUCCESS, payload: EventResponse[] }
+export interface FindEventsSuccessAction { type: FindEventsActionType.SUCCESS, payload: Event[] }
 export interface FindEventsErrorAction { type: FindEventsActionType.ERROR, error: any }
 
 export type FindEventsAction = FindEventsLoadingAction | FindEventsSuccessAction | FindEventsErrorAction;
 
 const findEventsLoading = (loading: boolean): FindEventsLoadingAction => ({ type: FindEventsActionType.LOADING, loading });
-const findEventsSuccess = (payload: EventResponse[]): FindEventsSuccessAction => ({ type: FindEventsActionType.SUCCESS, payload });
+const findEventsSuccess = (payload: Event[]): FindEventsSuccessAction => ({ type: FindEventsActionType.SUCCESS, payload });
 const findEventsError = (error: any): FindEventsErrorAction => ({ type: FindEventsActionType.ERROR, error });
 
 export function findEvents(id: string) {

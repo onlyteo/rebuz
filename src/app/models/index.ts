@@ -1,3 +1,4 @@
+export * from './globals';
 export * from './events';
 export * from './teams';
 export * from './questions';

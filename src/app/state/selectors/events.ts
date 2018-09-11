@@ -1,4 +1,4 @@
-import { RootState } from '../types';
+import { RootState } from '../../models';
 import { createSelector } from 'reselect';
 
 const getEventsState = ((state: RootState) => state.events);

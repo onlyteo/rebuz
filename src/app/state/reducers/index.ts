@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 
 import * as events from './events';
-import { RootState } from '../types';
+import * as teams from './teams';
+import { RootState } from '../../models';
 
 export const rootReducer = combineReducers<RootState>({
-    events: events.find
+    events: events.find,
+    teams: teams.get
 });

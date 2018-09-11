@@ -8,7 +8,7 @@ import { Routes } from './core';
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
-function Root() {
+const Root = () => {
     return (
         <Provider store={store}>
             <Routes />

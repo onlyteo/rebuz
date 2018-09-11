@@ -6,8 +6,7 @@ import { push, RouterAction } from 'react-router-redux';
 import { Container, Form, Message, Segment } from 'semantic-ui-react'
 
 import { HeaderComponent } from '../../components/header';
-import { EventResponse } from "../../models";
-import { RootState } from '../../state/types';
+import { EventState, RootState } from "../../models";
 import { findEvents } from '../../state/actions';
 
 import './home.css';
@@ -29,8 +28,7 @@ interface ComponentDispatchProps {
 }
 
 interface ComponentStateProps {
-  events?: EventResponse[];
-  loading: boolean;
+  events: EventState;
   error: any;
 }
 
@@ -61,7 +59,7 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
   componentDidUpdate() {
     console.log('did update');
     const { formEventId, formSubmitted, formError } = this.state;
-    const { events, loading } = this.props;
+    const { events, loading } = this.props.events;
 
     if (formSubmitted && !formError && !loading) {
       if (!events || events.length < 1) {
@@ -130,8 +128,7 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
 }
 
 const mapStateToProps = (state: RootState): ComponentStateProps => ({
-  events: state.events.events,
-  loading: state.events.loading,
+  events: state.events,
   error: null
 });
 
