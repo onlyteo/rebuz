@@ -34,7 +34,7 @@ interface ComponentStateProps {
 
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
-const initialState = {
+const initialState: ComponentState = {
   shouldRedirect: false,
   redirectEventId: '',
   formEventId: '',
@@ -53,11 +53,9 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
   }
 
   componentDidMount() {
-    console.log('did mount');
   }
 
   componentDidUpdate() {
-    console.log('did update');
     const { formEventId, formSubmitted, formError } = this.state;
     const { events, loading } = this.props.events;
 
@@ -67,7 +65,6 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
       } else if (events.length > 1) {
         this.setFormError(`More than one event found for id "${formEventId}"`);
       } else {
-        console.log('found event ' + events[0]);
         const newState = { shouldRedirect: true, redirectEventId: formEventId }
         this.setState(newState);
       }
@@ -101,16 +98,12 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
 
   private handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const { value } = event.currentTarget;
-    console.log('change');
-    console.log(value);
     const newState = { formEventId: value, formError: false, formSubmitted: false }
     this.setState(newState);
   }
 
   private handleSubmit = () => {
-    const { formEventId } = this.state
-    console.log('submit');
-    console.log(formEventId);
+    const { formEventId } = this.state;
 
     if (formEventId.length == 6) {
       const newState = { formSubmitted: true, formError: false }

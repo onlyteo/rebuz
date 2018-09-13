@@ -1,15 +1,22 @@
 import * as React from 'react';
 import { Component, ReactNode, SFC } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { push, RouterAction } from 'react-router-redux';
-import { Container, Icon, Message, Segment } from 'semantic-ui-react'
+import { Button, Container, Icon, Message, Segment } from 'semantic-ui-react'
 
 import { HeaderComponent } from '../../components/header';
 import { Event, EventState, RootState, Team, TeamState } from "../../models";
 import { findEvents, getTeam } from '../../state/actions';
 
 import './event.css';
+
+interface ComponentState {
+  shouldRedirect: boolean;
+  redirectQuestionId?: string;
+  selectedEvent?: Event;
+  selectedTeam?: Team;
+}
 
 interface ComponentDispatchProps {
   findEvents: (id: string) => Promise<any>;
@@ -25,10 +32,18 @@ interface ComponentStateProps {
 
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
-class EventContainer extends Component<ComponentProps> {
+const initialState: ComponentState = {
+  shouldRedirect: false
+}
+
+class EventContainer extends Component<ComponentProps, ComponentState> {
+
+  constructor(props) {
+    super(props);
+    this.state = initialState;
+  }
 
   componentDidMount() {
-    console.log('did mount');
     const { id } = this.props.match.params;
     if (id) {
       this.props.findEvents(id);
@@ -37,45 +52,76 @@ class EventContainer extends Component<ComponentProps> {
   }
 
   componentDidUpdate() {
-    console.log('did update');
   }
 
   public render(): ReactNode {
     const { id } = this.props.match.params;
+    const { shouldRedirect, redirectQuestionId, selectedEvent, selectedTeam } = this.state
     const { events, loading: eventsLoading } = this.props.events;
     const { teams, loading: teamsLoading } = this.props.teams;
 
-    if (id) {
-      if (eventsLoading || teamsLoading) {
-        return (
-          <ContainerFragment>
-            <LoadingFragment />
-          </ContainerFragment>
-        );
-      } else {
-        if (events && events.length > 0 && teams && teams.length > 0) {
-          const event = events[0];
-          const team = teams[0];
+    if (shouldRedirect) {
+      const path = `/question/${redirectQuestionId}`;
+      return <Redirect to={path} />
+    } else {
+      if (id) {
+        if (selectedEvent && selectedTeam) {
           return (
             <ContainerFragment>
-              <EventFragment event={event} team={team} />
+              <this.EventFragment event={selectedEvent} team={selectedTeam} />
+            </ContainerFragment>
+          );
+        } else if (eventsLoading || teamsLoading) {
+          return (
+            <ContainerFragment>
+              <LoadingFragment />
             </ContainerFragment>
           );
         } else {
-          return (
-            <ContainerFragment>
-              <NoEventFoundFragment />
-            </ContainerFragment>
-          );
+          if (events && events.length > 0 && teams && teams.length > 0) {
+            const newState = { selectedEvent: events[0], selectedTeam: teams[0] }
+            this.setState(newState);
+            return (
+              <ContainerFragment>
+                <LoadingFragment />
+              </ContainerFragment>
+            );
+          } else {
+            return (
+              <ContainerFragment>
+                <NoEventFoundFragment />
+              </ContainerFragment>
+            );
+          }
         }
+      } else {
+        return (
+          <ContainerFragment>
+            <NoEventSelectedFragment />
+          </ContainerFragment>
+        );
       }
-    } else {
-      return (
-        <ContainerFragment>
-          <NoEventSelectedFragment />
-        </ContainerFragment>
-      );
     }
+  }
+
+  private EventFragment: SFC<{ event: Event, team: Team }> = (props) => {
+    const { event, team } = props;
+    return (
+      <div>
+        <h3>Welcome to {event.name}</h3>
+        <h4>Your are team {team.name}</h4>
+        <p>
+          <Button id={team.questions[0]} onClick={() => this.handleClick(team)}>
+            Start rebuz! <Icon name="arrow right" />
+          </Button>
+        </p>
+      </div>
+    );
+  }
+
+  private handleClick = (team: Team) => {
+    const newState = { shouldRedirect: true, redirectQuestionId: team.questions[0] }
+    this.setState(newState);
   }
 }
 
@@ -91,16 +137,6 @@ const ContainerFragment: SFC<{}> = (props) => {
 
 const LoadingFragment: SFC = () => {
   return <h3>Loading</h3>;
-}
-
-const EventFragment: SFC<{ event: Event, team: Team }> = (props) => {
-  const { event, team } = props;
-  return (
-    <div>
-      <h3>Welcome to {event.name}</h3>
-      <h4>Your are team {team.name}</h4>
-    </div>
-  );
 }
 
 const NoEventFoundFragment: SFC = () => {
