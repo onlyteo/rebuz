@@ -38,7 +38,7 @@ const initialState: ComponentState = {
 
 class EventContainer extends Component<ComponentProps, ComponentState> {
 
-  constructor(props) {
+  constructor(props: ComponentProps) {
     super(props);
     this.state = initialState;
   }

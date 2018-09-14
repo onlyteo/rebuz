@@ -4,11 +4,11 @@ const entities = [
         id: '5oCnKZ',
         type: 'NORMAL',
         details: 'Gå til Meny',
-        question: '?',
+        question: 'Hvor mange?',
         answers: [
             {
                 id: '7cZHWF',
-                answer: ''
+                answer: '5'
             }
         ],
         answerId: '7cZHWF'

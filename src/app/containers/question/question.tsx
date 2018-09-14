@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
 import { push, RouterAction } from 'react-router-redux';
 import { Container, Form, Icon, Message, Segment } from 'semantic-ui-react'
+import * as _ from 'lodash';
 
 import { HeaderComponent } from '../../components/header';
 import { EventState, Question, QuestionState, RootState, TeamState } from "../../models";
@@ -13,13 +14,15 @@ import './question.css';
 
 interface ComponentState {
   shouldRedirect: boolean;
-  redirectEventId: string;
-  formEventId: string;
+  redirectQuestionId?: string;
+  formQuestionAnswer: string;
   formSubmitted: boolean;
-  formError: boolean;
   formInputPlaceholder: string;
   formButtonIcon: string;
-  formErrorMessage: string;
+  correctAnswer: boolean;
+  formWarning: boolean;
+  formError: boolean;
+  formMessage?: string;
 }
 
 interface ComponentDispatchProps {
@@ -34,9 +37,25 @@ interface ComponentStateProps {
   match?: any;
 }
 
+const initialState: ComponentState = {
+  formQuestionAnswer: '',
+  shouldRedirect: false,
+  formSubmitted: false,
+  formInputPlaceholder: 'Enter answer...',
+  formButtonIcon: 'arrow right',
+  correctAnswer: false,
+  formWarning: false,
+  formError: false,
+}
+
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
 class QuestionContainer extends Component<ComponentProps, ComponentState> {
+
+  constructor(props: ComponentProps) {
+    super(props);
+    this.state = initialState;
+  }
 
   componentDidMount() {
     const { id } = this.props.match.params;
@@ -85,43 +104,64 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
 
   private QuestionFragment: SFC<{ selectedQuestion: Question }> = (props) => {
     const { details, question } = props.selectedQuestion;
-    const { formEventId, formSubmitted, formError, formErrorMessage, formInputPlaceholder, formButtonIcon } = this.state
+    const { correctAnswer, formQuestionAnswer, formSubmitted, formInputPlaceholder, formButtonIcon, formWarning, formError, formMessage } = this.state
 
-    return (
-      <div>
-        <h3>{details}</h3>
-        <h4>{question}</h4>
-        <Form onSubmit={this.handleSubmit} error={formError}>
-          <Form.Group>
-            <Form.Input placeholder={formInputPlaceholder} value={formEventId} onChange={this.handleChange} error={formError} />
-            <Form.Button primary icon={formButtonIcon} loading={formSubmitted} />
-          </Form.Group>
-          <Message error>{formErrorMessage}</Message>
-        </Form>
-      </div>
-    );
+    if (correctAnswer) {
+      return (
+        <Message info><Icon name='thumbs up' /> Correct!</Message>
+      );
+    } else {
+      return (
+        <div>
+          <h3>{details}</h3>
+          <h4>{question}</h4>
+          <Form onSubmit={() => this.handleSubmit(props.selectedQuestion)} warning={formWarning} error={formError}>
+            <Form.Group>
+              <Form.Input placeholder={formInputPlaceholder} value={formQuestionAnswer} onChange={this.handleChange} error={formError} />
+              <Form.Button primary icon={formButtonIcon} loading={formSubmitted} />
+            </Form.Group>
+            <Message error><Icon name='ban' /> {formMessage}</Message>
+            <Message warning><Icon name='thumbs down' /> {formMessage}</Message>
+          </Form>
+        </div>
+      );
+    }
   }
 
   private handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const { value } = event.currentTarget;
-    const newState = { formEventId: value, formError: false, formSubmitted: false }
+    const newState = { formQuestionAnswer: value, formError: false, formSubmitted: false }
     this.setState(newState);
   }
 
-  private handleSubmit = () => {
-    const { formEventId } = this.state;
+  private handleSubmit = (selectedQuestion: Question) => {
+    const { formQuestionAnswer } = this.state;
+    const { answerId, answers } = selectedQuestion;
 
-    if (formEventId.length == 6) {
+    if (formQuestionAnswer) {
       const newState = { formSubmitted: true, formError: false }
       this.setState(newState);
-      //this.props.findEvents(formEventId);
+      const correctAnswer = answers.find(answer => answer.id == answerId);
+      const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
+      const sanitizedCorrectAnswer = _.toLower(_.trim(correctAnswer && correctAnswer.answer));
+      if (sanitizedSuppliedAnswer === sanitizedCorrectAnswer) {
+        const newState = { formSubmitted: false, formWarning: false, formError: false, correctAnswer: true }
+        this.setState(newState);
+      } else {
+        this.setFormWarning('You answer is incorrect, try again');
+      }
     } else {
-      this.setFormError('Event id must be a six character code');
+      this.setFormError('No answer supplied');
     }
   }
 
+  private setFormWarning = (message: string) => {
+    const newState = { formSubmitted: false, formWarning: true, formError: false, formMessage: message }
+    this.setState(newState);
+  }
+
   private setFormError = (message: string) => {
-    const newState = { formSubmitted: false, formError: true, formErrorMessage: message }
+    const newState = { formSubmitted: false, formWarning: false, formError: true, formMessage: message }
     this.setState(newState);
   }
 }

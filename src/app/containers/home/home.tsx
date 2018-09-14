@@ -3,7 +3,7 @@ import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 import { push, RouterAction } from 'react-router-redux';
-import { Container, Form, Message, Segment } from 'semantic-ui-react'
+import { Container, Form, Icon, Message, Segment } from 'semantic-ui-react'
 
 import { HeaderComponent } from '../../components/header';
 import { EventState, RootState } from "../../models";
@@ -13,13 +13,13 @@ import './home.css';
 
 interface ComponentState {
   shouldRedirect: boolean;
-  redirectEventId: string;
+  redirectEventId?: string;
   formEventId: string;
   formSubmitted: boolean;
   formError: boolean;
   formInputPlaceholder: string;
   formButtonIcon: string;
-  formErrorMessage: string;
+  formErrorMessage?: string;
 }
 
 interface ComponentDispatchProps {
@@ -35,19 +35,17 @@ interface ComponentStateProps {
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
 const initialState: ComponentState = {
-  shouldRedirect: false,
-  redirectEventId: '',
   formEventId: '',
+  shouldRedirect: false,
   formSubmitted: false,
   formError: false,
   formInputPlaceholder: 'Enter event id...',
   formButtonIcon: 'arrow right',
-  formErrorMessage: '',
 }
 
 class HomeContainer extends Component<ComponentProps, ComponentState> {
 
-  constructor(props) {
+  constructor(props: ComponentProps) {
     super(props);
     this.state = initialState;
   }
@@ -88,7 +86,7 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
                 <Form.Input placeholder={formInputPlaceholder} value={formEventId} onChange={this.handleChange} error={formError} />
                 <Form.Button primary icon={formButtonIcon} loading={formSubmitted} />
               </Form.Group>
-              <Message error>{formErrorMessage}</Message>
+              <Message error><Icon name='ban' /> {formErrorMessage}</Message>
             </Form>
           </Segment>
         </Container>
@@ -105,7 +103,7 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
   private handleSubmit = () => {
     const { formEventId } = this.state;
 
-    if (formEventId.length == 6) {
+    if (formEventId && formEventId.length == 6) {
       const newState = { formSubmitted: true, formError: false }
       this.setState(newState);
       this.props.findEvents(formEventId);
