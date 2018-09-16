@@ -3,11 +3,11 @@ import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 import { push, RouterAction } from 'react-router-redux';
-import { Container, Form, Icon, Message, Segment } from 'semantic-ui-react'
 
-import { HeaderComponent } from '../../components/header';
+import { GenericPage, LoadingPage } from '../../components';
 import { EventState, RootState } from "../../models";
 import { findEvents } from '../../state/actions';
+import { HomeForm } from './home-form'
 
 import './home.css';
 
@@ -17,8 +17,6 @@ interface ComponentState {
   formEventId: string;
   formSubmitted: boolean;
   formError: boolean;
-  formInputPlaceholder: string;
-  formButtonIcon: string;
   formErrorMessage?: string;
 }
 
@@ -28,19 +26,16 @@ interface ComponentDispatchProps {
 }
 
 interface ComponentStateProps {
-  events: EventState;
-  error: any;
+  eventState: EventState;
 }
 
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
 const initialState: ComponentState = {
-  formEventId: '',
   shouldRedirect: false,
   formSubmitted: false,
   formError: false,
-  formInputPlaceholder: 'Enter event id...',
-  formButtonIcon: 'arrow right',
+  formEventId: ''
 }
 
 class HomeContainer extends Component<ComponentProps, ComponentState> {
@@ -54,73 +49,79 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
   }
 
   componentDidUpdate() {
-    const { formEventId, formSubmitted, formError } = this.state;
-    const { events, loading } = this.props.events;
+    const { formEventId, formSubmitted } = this.state;
+    const { eventState } = this.props;
 
-    if (formSubmitted && !formError && !loading) {
+    if (formSubmitted && eventState && !eventState.loading) {
+      const { events } = eventState;
+
       if (!events || events.length < 1) {
-        this.setFormError(`No event found for id "${formEventId}"`);
+        this.setFormErrorState(`No event found for id "${formEventId}"`);
       } else if (events.length > 1) {
-        this.setFormError(`More than one event found for id "${formEventId}"`);
+        this.setFormErrorState(`More than one event found for id "${formEventId}"`);
       } else {
-        const newState = { shouldRedirect: true, redirectEventId: formEventId }
-        this.setState(newState);
+        this.setRedirectState(formEventId);
       }
     }
   }
 
   public render(): ReactNode {
-
-    const { formEventId, shouldRedirect, redirectEventId, formSubmitted, formError, formErrorMessage, formInputPlaceholder, formButtonIcon } = this.state
+    const { formEventId, shouldRedirect, redirectEventId, formError, formErrorMessage } = this.state
+    const { eventState } = this.props;
 
     if (shouldRedirect) {
       const path = `/event/${redirectEventId}`;
       return <Redirect to={path} />
+    } else if (eventState && eventState.loading) {
+      return <LoadingPage />
     } else {
       return (
-        <Container>
-          <HeaderComponent />
-          <Segment vertical>
-            <Form onSubmit={this.handleSubmit} error={formError}>
-              <Form.Group>
-                <Form.Input placeholder={formInputPlaceholder} value={formEventId} onChange={this.handleChange} error={formError} />
-                <Form.Button primary icon={formButtonIcon} loading={formSubmitted} />
-              </Form.Group>
-              <Message error><Icon name='ban' /> {formErrorMessage}</Message>
-            </Form>
-          </Segment>
-        </Container>
+        <GenericPage>
+          <HomeForm formEventId={formEventId} formError={formError} formErrorMessage={formErrorMessage} onChange={this.handleChange} onSubmit={this.handleSubmit} />
+        </GenericPage>
       );
     }
   }
 
   private handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const { value } = event.currentTarget;
-    const newState = { formEventId: value, formError: false, formSubmitted: false }
-    this.setState(newState);
+    this.setFormUpdatedState(value);
   }
 
   private handleSubmit = () => {
     const { formEventId } = this.state;
 
     if (formEventId && formEventId.length == 6) {
-      const newState = { formSubmitted: true, formError: false }
-      this.setState(newState);
       this.props.findEvents(formEventId);
+      this.setFormSubmittedState();
     } else {
-      this.setFormError('Event id must be a six character code');
+      this.setFormErrorState('Event id must be a six character code');
     }
   }
 
-  private setFormError = (message: string) => {
+  private setRedirectState = (formEventId: string) => {
+    const newState = { shouldRedirect: true, redirectEventId: formEventId, formError: false, formErrorMessage: undefined }
+    this.setState(newState);
+  }
+
+  private setFormSubmittedState = () => {
+    const newState = { formSubmitted: true, formError: false, formErrorMessage: undefined }
+    this.setState(newState);
+  }
+
+  private setFormUpdatedState = (formEventId: string) => {
+    const newState = { formEventId: formEventId, formSubmitted: false, formError: false, formErrorMessage: undefined }
+    this.setState(newState);
+  }
+
+  private setFormErrorState = (message: string) => {
     const newState = { formSubmitted: false, formError: true, formErrorMessage: message }
     this.setState(newState);
   }
 }
 
 const mapStateToProps = (state: RootState): ComponentStateProps => ({
-  events: state.events,
-  error: null
+  eventState: state.events
 });
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({

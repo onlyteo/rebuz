@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { ChangeEventHandler, Component, ReactNode, SFC } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { push, RouterAction } from 'react-router-redux';
-import { Container, Form, Icon, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Icon, Message } from 'semantic-ui-react'
 import * as _ from 'lodash';
 
-import { HeaderComponent } from '../../components/header';
+import { GenericPage, NotificationPage, LoadingPage } from '../../components';
 import { EventState, Question, QuestionState, RootState, TeamState } from "../../models";
-import { getQuestion } from '../../state/actions';
+import { findEvents, getTeam, getQuestion } from '../../state/actions';
 
 import './question.css';
 
@@ -17,8 +17,6 @@ interface ComponentState {
   redirectQuestionId?: string;
   formQuestionAnswer: string;
   formSubmitted: boolean;
-  formInputPlaceholder: string;
-  formButtonIcon: string;
   correctAnswer: boolean;
   formWarning: boolean;
   formError: boolean;
@@ -27,13 +25,15 @@ interface ComponentState {
 
 interface ComponentDispatchProps {
   getQuestion: (id: string) => Promise<any>;
+  findEvents: (id: string) => Promise<any>;
+  getTeam: (id: string) => Promise<any>;
   push: (location: string) => RouterAction;
 }
 
 interface ComponentStateProps {
-  events: EventState;
-  teams: TeamState;
-  question: QuestionState;
+  eventState: EventState;
+  teamState: TeamState;
+  questionState: QuestionState;
   match?: any;
 }
 
@@ -41,8 +41,6 @@ const initialState: ComponentState = {
   formQuestionAnswer: '',
   shouldRedirect: false,
   formSubmitted: false,
-  formInputPlaceholder: 'Enter answer...',
-  formButtonIcon: 'arrow right',
   correctAnswer: false,
   formWarning: false,
   formError: false,
@@ -58,9 +56,19 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
   }
 
   componentDidMount() {
-    const { id } = this.props.match.params;
-    if (id) {
-      this.props.getQuestion(id);
+    const { eventId, questionId } = this.props.match.params;
+    const { eventState, teamState, questionState } = this.props;
+
+    if (eventId && (!eventState || !eventState.events || !eventState.events.length)) {
+      this.props.findEvents(eventId);
+    }
+
+    if (eventId && (!teamState || !teamState.teams || !teamState.teams.lastIndexOf)) {
+      this.props.getTeam(eventId);
+    }
+
+    if (questionId && (!questionState || !questionState.question)) {
+      this.props.getQuestion(questionId);
     }
   }
 
@@ -68,47 +76,48 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
   }
 
   public render(): ReactNode {
-    const { id } = this.props.match.params;
-    const { question: selectedQuestion, loading: questionLoading } = this.props.question;
+    const { eventId, questionId } = this.props.match.params;
+    const { question: selectedQuestion, loading: questionLoading } = this.props.questionState;
+    const { shouldRedirect, redirectQuestionId } = this.state
 
-    if (id) {
-      if (questionLoading) {
-        return (
-          <ContainerFragment>
-            <LoadingFragment />
-          </ContainerFragment>
-        );
-      } else {
-        if (selectedQuestion) {
-          return (
-            <ContainerFragment>
-              <this.QuestionFragment selectedQuestion={selectedQuestion} />
-            </ContainerFragment>
-          );
-        } else {
-          return (
-            <ContainerFragment>
-              <NoQuestionFoundFragment />
-            </ContainerFragment>
-          );
-        }
-      }
+    if (shouldRedirect) {
+      const path = `/event/${eventId}/question/${redirectQuestionId}`;
+      return <Redirect to={path} />
     } else {
-      return (
-        <ContainerFragment>
-          <NoQuestionSelectedFragment />
-        </ContainerFragment>
-      );
+      if (questionId) {
+        if (questionLoading) {
+          return <LoadingPage />
+        } else {
+          if (selectedQuestion) {
+            return (
+              <GenericPage>
+                <this.QuestionFragment selectedQuestion={selectedQuestion} />
+              </GenericPage>
+            );
+          } else {
+            return <NotificationPage error message='No question found for id' />
+          }
+        }
+      } else {
+        return <NotificationPage error message='No question id selected' />
+      }
     }
   }
 
   private QuestionFragment: SFC<{ selectedQuestion: Question }> = (props) => {
     const { details, question } = props.selectedQuestion;
-    const { correctAnswer, formQuestionAnswer, formSubmitted, formInputPlaceholder, formButtonIcon, formWarning, formError, formMessage } = this.state
+    const { correctAnswer, formQuestionAnswer, formSubmitted, formWarning, formError, formMessage } = this.state
 
     if (correctAnswer) {
       return (
-        <Message info><Icon name='thumbs up' /> Correct!</Message>
+        <div>
+          <Message info><Icon name='thumbs up' /> Correct!</Message>
+          <p>
+            <Button primary onClick={() => this.handleClick(props.selectedQuestion)}>
+              Next question! <Icon name="arrow right" />
+            </Button>
+          </p>
+        </div>
       );
     } else {
       return (
@@ -117,14 +126,31 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
           <h4>{question}</h4>
           <Form onSubmit={() => this.handleSubmit(props.selectedQuestion)} warning={formWarning} error={formError}>
             <Form.Group>
-              <Form.Input placeholder={formInputPlaceholder} value={formQuestionAnswer} onChange={this.handleChange} error={formError} />
-              <Form.Button primary icon={formButtonIcon} loading={formSubmitted} />
+              <Form.Input placeholder='Enter answer...' value={formQuestionAnswer} onChange={this.handleChange} error={formError} />
+              <Form.Button primary loading={formSubmitted}>
+                Answer {'\u00A0'}<Icon name="check" />
+              </Form.Button>
             </Form.Group>
             <Message error><Icon name='ban' /> {formMessage}</Message>
             <Message warning><Icon name='thumbs down' /> {formMessage}</Message>
           </Form>
         </div>
       );
+    }
+  }
+
+  private handleClick = (selectedQuestion: Question) => {
+    const { id } = selectedQuestion;
+    const { teamState } = this.props;
+    const { questions } = teamState.teams[0];
+
+    const index = questions.indexOf(id);
+    if (index + 1 < questions.length) {
+      const nextId = questions[index + 1];
+      const newState = { shouldRedirect: true, redirectQuestionId: nextId }
+      this.setState(newState);
+    } else {
+      console.log('Oh no, index: ' + index);
     }
   }
 
@@ -166,35 +192,15 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
   }
 }
 
-const ContainerFragment: SFC<{}> = (props) => {
-  const { children } = props;
-  return (
-    <Container>
-      <HeaderComponent />
-      <Segment vertical>{children}</Segment>
-    </Container>
-  );
-}
-
-const LoadingFragment: SFC = () => {
-  return <h3>Loading</h3>;
-}
-
-const NoQuestionFoundFragment: SFC = () => {
-  return <Message warning>No question found for id.<br /><Link to='/'><Icon name='home' />Go to home page</Link></Message>;
-}
-
-const NoQuestionSelectedFragment: SFC = () => {
-  return <Message warning>No question id selected.<br /><Link to='/'><Icon name='home' />Go to home page</Link></Message>;
-}
-
 const mapStateToProps = (state: RootState): ComponentStateProps => ({
-  events: state.events,
-  teams: state.teams,
-  question: state.question
+  eventState: state.events,
+  teamState: state.teams,
+  questionState: state.question
 });
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
+  findEvents: (id: string) => dispatch(findEvents(id)),
+  getTeam: (id: string) => dispatch(getTeam(id)),
   getQuestion: (id: string) => dispatch(getQuestion(id)),
   push: (location: string) => dispatch(push(location))
 });

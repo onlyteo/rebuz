@@ -6,7 +6,7 @@ interface ComponentProps {
   subtitle?: string;
 }
 
-class HeaderComponent extends Component<ComponentProps> {
+class MainHeader extends Component<ComponentProps> {
 
   state = {
     mainTitle: 'Rebuz'
@@ -35,4 +35,4 @@ class HeaderComponent extends Component<ComponentProps> {
   }
 }
 
-export { HeaderComponent };
+export { MainHeader };
