@@ -14,10 +14,6 @@ interface ComponentProps {
 
 class HomeForm extends Component<ComponentProps> {
 
-  constructor(props: ComponentProps) {
-    super(props);
-  }
-
   public render(): ReactNode {
     const { formEventId, formError, formErrorMessage, onChange, onSubmit } = this.props;
 

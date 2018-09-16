@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { ChangeEventHandler, Component, ReactNode, SFC } from 'react';
+import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 import { push, RouterAction } from 'react-router-redux';
-import { Button, Form, Icon, Message } from 'semantic-ui-react'
+import { Button, Icon, Message } from 'semantic-ui-react'
 import * as _ from 'lodash';
 
 import { GenericPage, NotificationPage, LoadingPage } from '../../components';
-import { EventState, Question, QuestionState, RootState, TeamState } from "../../models";
+import { Event, EventState, Question, QuestionState, RootState, Team, TeamState } from "../../models";
 import { findEvents, getTeam, getQuestion } from '../../state/actions';
+import { QuestionForm } from './question-form';
 
 import './question.css';
 
@@ -21,6 +22,8 @@ interface ComponentState {
   formWarning: boolean;
   formError: boolean;
   formMessage?: string;
+  selectedEvent?: Event;
+  selectedTeam?: Team;
 }
 
 interface ComponentDispatchProps {
@@ -73,84 +76,82 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
   }
 
   componentDidUpdate() {
+    const { eventId } = this.props.match.params;
+    const { eventState, teamState } = this.props;
+    const { selectedEvent, selectedTeam } = this.state;
+
+    if (eventId && !selectedEvent && !selectedTeam && eventState && teamState) {
+      const { events, loading: eventsLoading } = eventState;
+      const { teams, loading: teamsLoading } = teamState;
+
+      if (!eventsLoading && !teamsLoading && events && events.length > 0 && teams && teams.length > 0) {
+        const newState = { selectedEvent: events[0], selectedTeam: teams[0] }
+        this.setState(newState);
+      }
+    }
   }
 
   public render(): ReactNode {
     const { eventId, questionId } = this.props.match.params;
     const { question: selectedQuestion, loading: questionLoading } = this.props.questionState;
-    const { shouldRedirect, redirectQuestionId } = this.state
+    const { correctAnswer, shouldRedirect, redirectQuestionId, formQuestionAnswer, formWarning, formError, formMessage } = this.state
 
     if (shouldRedirect) {
       const path = `/event/${eventId}/question/${redirectQuestionId}`;
       return <Redirect to={path} />
-    } else {
-      if (questionId) {
-        if (questionLoading) {
-          return <LoadingPage />
-        } else {
-          if (selectedQuestion) {
-            return (
-              <GenericPage>
-                <this.QuestionFragment selectedQuestion={selectedQuestion} />
-              </GenericPage>
-            );
-          } else {
-            return <NotificationPage error message='No question found for id' />
-          }
-        }
+    } else if (questionId) {
+      if (questionLoading) {
+        return <LoadingPage />
       } else {
-        return <NotificationPage error message='No question id selected' />
+        if (selectedQuestion && correctAnswer) {
+          return (
+            <GenericPage>
+              <Message info><Icon name='thumbs up' /> Correct!</Message>
+              <p>
+                <Button primary onClick={() => this.handleClick(selectedQuestion)}>
+                  Next question! <Icon name="arrow right" />
+                </Button>
+              </p>
+            </GenericPage>
+          );
+        } else if (selectedQuestion && !correctAnswer) {
+          return (
+            <GenericPage>
+              <QuestionForm
+                question={selectedQuestion}
+                formAnswer={formQuestionAnswer}
+                formWarning={formWarning}
+                formError={formError}
+                formErrorMessage={formMessage}
+                formWarningMessage={formMessage}
+                onChange={this.handleChange}
+                onSubmit={() => this.handleSubmit(selectedQuestion)} />
+            </GenericPage>
+          );
+        } else {
+          return <NotificationPage error message='No question found for id' />
+        }
       }
-    }
-  }
-
-  private QuestionFragment: SFC<{ selectedQuestion: Question }> = (props) => {
-    const { details, question } = props.selectedQuestion;
-    const { correctAnswer, formQuestionAnswer, formSubmitted, formWarning, formError, formMessage } = this.state
-
-    if (correctAnswer) {
-      return (
-        <div>
-          <Message info><Icon name='thumbs up' /> Correct!</Message>
-          <p>
-            <Button primary onClick={() => this.handleClick(props.selectedQuestion)}>
-              Next question! <Icon name="arrow right" />
-            </Button>
-          </p>
-        </div>
-      );
     } else {
-      return (
-        <div>
-          <h3>{details}</h3>
-          <h4>{question}</h4>
-          <Form onSubmit={() => this.handleSubmit(props.selectedQuestion)} warning={formWarning} error={formError}>
-            <Form.Group>
-              <Form.Input placeholder='Enter answer...' value={formQuestionAnswer} onChange={this.handleChange} error={formError} />
-              <Form.Button primary loading={formSubmitted}>
-                Answer {'\u00A0'}<Icon name="check" />
-              </Form.Button>
-            </Form.Group>
-            <Message error><Icon name='ban' /> {formMessage}</Message>
-            <Message warning><Icon name='thumbs down' /> {formMessage}</Message>
-          </Form>
-        </div>
-      );
+      return <NotificationPage error message='No question id selected' />
     }
   }
 
   private handleClick = (selectedQuestion: Question) => {
     const { id } = selectedQuestion;
-    const { teamState } = this.props;
-    const { questions } = teamState.teams[0];
+    const { selectedTeam } = this.state;
 
-    const index = questions.indexOf(id);
-    if (index + 1 < questions.length) {
-      const nextId = questions[index + 1];
-      const newState = { shouldRedirect: true, redirectQuestionId: nextId }
-      this.setState(newState);
-    } else {
-      console.log('Oh no, index: ' + index);
+    if (selectedTeam) {
+      const { questions } = selectedTeam;
+
+      const index = questions.indexOf(id);
+      if (index + 1 < questions.length) {
+        const nextId = questions[index + 1];
+        const newState = { shouldRedirect: true, redirectQuestionId: nextId }
+        this.setState(newState);
+      } else {
+        console.log('Oh no, index: ' + index);
+      }
     }
   }
 
@@ -162,15 +163,11 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
 
   private handleSubmit = (selectedQuestion: Question) => {
     const { formQuestionAnswer } = this.state;
-    const { answerId, answers } = selectedQuestion;
 
     if (formQuestionAnswer) {
       const newState = { formSubmitted: true, formError: false }
       this.setState(newState);
-      const correctAnswer = answers.find(answer => answer.id == answerId);
-      const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
-      const sanitizedCorrectAnswer = _.toLower(_.trim(correctAnswer && correctAnswer.answer));
-      if (sanitizedSuppliedAnswer === sanitizedCorrectAnswer) {
+      if (this.isCorrectAnswer(selectedQuestion)) {
         const newState = { formSubmitted: false, formWarning: false, formError: false, correctAnswer: true }
         this.setState(newState);
       } else {
@@ -179,6 +176,16 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
     } else {
       this.setFormError('No answer supplied');
     }
+  }
+
+  private isCorrectAnswer = (selectedQuestion: Question): boolean => {
+    const { formQuestionAnswer } = this.state;
+    const { answerId, answers } = selectedQuestion;
+
+    const correctAnswer = answers.find(answer => answer.id == answerId);
+    const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
+    const sanitizedCorrectAnswer = _.toLower(_.trim(correctAnswer && correctAnswer.answer));
+    return sanitizedSuppliedAnswer === sanitizedCorrectAnswer;
   }
 
   private setFormWarning = (message: string) => {
