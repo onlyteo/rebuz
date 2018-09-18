@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
-import { push, RouterAction } from 'react-router-redux';
 import { Button, Icon } from 'semantic-ui-react'
 
 import { GenericPage, NotificationPage, LoadingPage } from '../../components';
@@ -21,7 +20,6 @@ interface ComponentState {
 interface ComponentDispatchProps {
   findEvents: (id: string) => Promise<any>;
   getTeam: (id: string) => Promise<any>;
-  push: (location: string) => RouterAction;
 }
 
 interface ComponentStateProps {
@@ -115,8 +113,7 @@ const mapStateToProps = (state: RootState): ComponentStateProps => ({
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
   findEvents: (id: string) => dispatch(findEvents(id)),
-  getTeam: (id: string) => dispatch(getTeam(id)),
-  push: (location: string) => dispatch(push(location))
+  getTeam: (id: string) => dispatch(getTeam(id))
 });
 
 const EventContainerConnected = connect(mapStateToProps, mapDispatchToProps)(EventContainer);

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
-import { push, RouterAction } from 'react-router-redux';
 import { Button, Icon, Message } from 'semantic-ui-react'
 import * as _ from 'lodash';
 
@@ -30,7 +29,6 @@ interface ComponentDispatchProps {
   getQuestion: (id: string) => Promise<any>;
   findEvents: (id: string) => Promise<any>;
   getTeam: (id: string) => Promise<any>;
-  push: (location: string) => RouterAction;
 }
 
 interface ComponentStateProps {
@@ -56,9 +54,11 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
   constructor(props: ComponentProps) {
     super(props);
     this.state = initialState;
+    console.log('Did construct');
   }
 
   componentDidMount() {
+    console.log('Did mount');
     const { eventId, questionId } = this.props.match.params;
     const { eventState, teamState, questionState } = this.props;
 
@@ -66,7 +66,7 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
       this.props.findEvents(eventId);
     }
 
-    if (eventId && (!teamState || !teamState.teams || !teamState.teams.lastIndexOf)) {
+    if (eventId && (!teamState || !teamState.teams || !teamState.teams.length)) {
       this.props.getTeam(eventId);
     }
 
@@ -76,6 +76,7 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
   }
 
   componentDidUpdate() {
+    console.log('Did update');
     const { eventId } = this.props.match.params;
     const { eventState, teamState } = this.props;
     const { selectedEvent, selectedTeam } = this.state;
@@ -95,10 +96,10 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
     const { eventId, questionId } = this.props.match.params;
     const { question: selectedQuestion, loading: questionLoading } = this.props.questionState;
     const { correctAnswer, shouldRedirect, redirectQuestionId, formQuestionAnswer, formWarning, formError, formMessage } = this.state
-
+    console.log(this.state);
     if (shouldRedirect) {
       const path = `/event/${eventId}/question/${redirectQuestionId}`;
-      return <Redirect to={path} />
+      return <Redirect push to={path} />
     } else if (questionId) {
       if (questionLoading) {
         return <LoadingPage />
@@ -145,13 +146,17 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
       const { questions } = selectedTeam;
 
       const index = questions.indexOf(id);
-      if (index + 1 < questions.length) {
-        const nextId = questions[index + 1];
-        const newState = { shouldRedirect: true, redirectQuestionId: nextId }
+      const nextIndex = index + 1;
+      if (nextIndex < questions.length) {
+        console.log('Next index' + nextIndex);
+        const nextId = questions[nextIndex];
+        const newState = { shouldRedirect: true, redirectQuestionId: nextId, correctAnswer: false }
         this.setState(newState);
       } else {
-        console.log('Oh no, index: ' + index);
+        console.log('Oh no, next index: ' + nextIndex);
       }
+    } else {
+      console.log('Oh no, missing team');
     }
   }
 
@@ -209,7 +214,6 @@ const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
   findEvents: (id: string) => dispatch(findEvents(id)),
   getTeam: (id: string) => dispatch(getTeam(id)),
   getQuestion: (id: string) => dispatch(getQuestion(id)),
-  push: (location: string) => dispatch(push(location))
 });
 
 const QuestionContainerConnected = connect(mapStateToProps, mapDispatchToProps)(QuestionContainer);

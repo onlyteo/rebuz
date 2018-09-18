@@ -16,12 +16,12 @@ const entities = [
     {
         id: 'S0Cl65',
         type: 'NORMAL',
-        details: 'Gå til Meny',
-        question: '?',
+        details: 'Gå til yolo',
+        question: 'Hvor langt?',
         answers: [
             {
                 id: '7cZHWF',
-                answer: ''
+                answer: '7'
             }
         ],
         answerId: '7cZHWF'

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
-import { push, RouterAction } from 'react-router-redux';
 
 import { GenericPage, LoadingPage } from '../../components';
 import { EventState, RootState } from "../../models";
@@ -22,7 +21,6 @@ interface ComponentState {
 
 interface ComponentDispatchProps {
   findEvents: (id: string) => Promise<any>;
-  push: (location: string) => RouterAction;
 }
 
 interface ComponentStateProps {
@@ -125,8 +123,7 @@ const mapStateToProps = (state: RootState): ComponentStateProps => ({
 });
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
-  findEvents: (id: string) => dispatch(findEvents(id)),
-  push: (location: string) => dispatch(push(location))
+  findEvents: (id: string) => dispatch(findEvents(id))
 });
 
 const HomeContainerConnected = connect(mapStateToProps, mapDispatchToProps)(HomeContainer);
