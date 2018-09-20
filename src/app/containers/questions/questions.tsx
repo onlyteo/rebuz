@@ -5,12 +5,12 @@ import { Redirect } from 'react-router-dom'
 import { Button, Icon, Message } from 'semantic-ui-react'
 import * as _ from 'lodash';
 
-import { GenericPage, NotificationPage, LoadingPage } from '../../components';
+import { NotificationMessage, LoadingIndicator } from '../../components';
 import { Event, EventState, Question, QuestionState, RootState, Team, TeamState } from "../../models";
 import { findEvents, getTeam, getQuestion } from '../../state/actions';
-import { QuestionForm } from './question-form';
+import { QuestionsForm } from './questions-form';
 
-import './question.css';
+import './questions.css';
 
 interface ComponentState {
   shouldRedirect: boolean;
@@ -23,6 +23,7 @@ interface ComponentState {
   formMessage?: string;
   selectedEvent?: Event;
   selectedTeam?: Team;
+  selectedQuestion?: Question;
 }
 
 interface ComponentDispatchProps {
@@ -49,7 +50,7 @@ const initialState: ComponentState = {
 
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
-class QuestionContainer extends Component<ComponentProps, ComponentState> {
+class Questions extends Component<ComponentProps, ComponentState> {
 
   constructor(props: ComponentProps) {
     super(props);
@@ -60,33 +61,52 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
   componentDidMount() {
     console.log('Did mount');
     const { eventId, questionId } = this.props.match.params;
-    const { eventState, teamState, questionState } = this.props;
 
-    if (eventId && (!eventState || !eventState.events || !eventState.events.length)) {
+    if (this.shouldFindEvents(eventId)) {
       this.props.findEvents(eventId);
     }
 
-    if (eventId && (!teamState || !teamState.teams || !teamState.teams.length)) {
+    if (this.shouldGetTeam(eventId)) {
       this.props.getTeam(eventId);
     }
 
-    if (questionId && (!questionState || !questionState.question)) {
+    if (this.shouldGetQuestion(questionId)) {
       this.props.getQuestion(questionId);
     }
   }
 
+  componentWillUpdate() {
+  }
+
   componentDidUpdate() {
     console.log('Did update');
-    const { eventId } = this.props.match.params;
-    const { eventState, teamState } = this.props;
-    const { selectedEvent, selectedTeam } = this.state;
+    const { eventId, questionId } = this.props.match.params;
+    const { eventState, teamState, questionState } = this.props;
+    const { selectedEvent, selectedTeam, selectedQuestion } = this.state;
 
-    if (eventId && !selectedEvent && !selectedTeam && eventState && teamState) {
-      const { events, loading: eventsLoading } = eventState;
-      const { teams, loading: teamsLoading } = teamState;
+    if (eventId && eventState && !selectedEvent) {
+      const { events, loading } = eventState;
 
-      if (!eventsLoading && !teamsLoading && events && events.length > 0 && teams && teams.length > 0) {
-        const newState = { selectedEvent: events[0], selectedTeam: teams[0] }
+      if (!loading && events && events.length > 0) {
+        const newState = { selectedEvent: events[0] }
+        this.setState(newState);
+      }
+    }
+
+    if (eventId && teamState && !selectedTeam) {
+      const { teams, loading } = teamState;
+
+      if (!loading && teams && teams.length > 0) {
+        const newState = { selectedTeam: teams[0] }
+        this.setState(newState);
+      }
+    }
+
+    if (questionId && questionState && (!selectedQuestion || selectedQuestion.id !== questionId)) {
+      const { question, loading } = questionState;
+
+      if (!loading && question) {
+        const newState = { selectedQuestion: question }
         this.setState(newState);
       }
     }
@@ -98,43 +118,47 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
     const { correctAnswer, shouldRedirect, redirectQuestionId, formQuestionAnswer, formWarning, formError, formMessage } = this.state
     console.log(this.state);
     if (shouldRedirect) {
+      console.log('Should redirect');
       const path = `/event/${eventId}/question/${redirectQuestionId}`;
       return <Redirect push to={path} />
     } else if (questionId) {
       if (questionLoading) {
-        return <LoadingPage />
+        console.log('Loading');
+        return <LoadingIndicator />
       } else {
         if (selectedQuestion && correctAnswer) {
+          console.log('Correct answer');
           return (
-            <GenericPage>
+            <div>
               <Message info><Icon name='thumbs up' /> Correct!</Message>
               <p>
                 <Button primary onClick={() => this.handleClick(selectedQuestion)}>
                   Next question! <Icon name="arrow right" />
                 </Button>
               </p>
-            </GenericPage>
+            </div>
           );
         } else if (selectedQuestion && !correctAnswer) {
+          console.log('Should answer');
           return (
-            <GenericPage>
-              <QuestionForm
-                question={selectedQuestion}
-                formAnswer={formQuestionAnswer}
-                formWarning={formWarning}
-                formError={formError}
-                formErrorMessage={formMessage}
-                formWarningMessage={formMessage}
-                onChange={this.handleChange}
-                onSubmit={() => this.handleSubmit(selectedQuestion)} />
-            </GenericPage>
+            <QuestionsForm
+              question={selectedQuestion}
+              formAnswer={formQuestionAnswer}
+              formWarning={formWarning}
+              formError={formError}
+              formErrorMessage={formMessage}
+              formWarningMessage={formMessage}
+              onChange={this.handleChange}
+              onSubmit={() => this.handleSubmit(selectedQuestion)} />
           );
         } else {
-          return <NotificationPage error message='No question found for id' />
+          console.log('No question found');
+          return <NotificationMessage error message='No question found for id' />
         }
       }
     } else {
-      return <NotificationPage error message='No question id selected' />
+      console.log('No question id');
+      return <NotificationMessage error message='No question id selected' />
     }
   }
 
@@ -183,6 +207,21 @@ class QuestionContainer extends Component<ComponentProps, ComponentState> {
     }
   }
 
+  private shouldFindEvents = (eventId: string): boolean => {
+    const { eventState } = this.props;
+    return !_.isEmpty(eventId) && (!eventState || !eventState.events || !eventState.events.length);
+  }
+
+  private shouldGetTeam = (eventId: string): boolean => {
+    const { teamState } = this.props;
+    return !_.isEmpty(eventId) && (!teamState || !teamState.teams || !teamState.teams.length);
+  }
+
+  private shouldGetQuestion = (questionId: string): boolean => {
+    const { questionState } = this.props;
+    return !_.isEmpty(questionId) && (!questionState || !questionState.question || questionState.question.id !== questionId);
+  }
+
   private isCorrectAnswer = (selectedQuestion: Question): boolean => {
     const { formQuestionAnswer } = this.state;
     const { answerId, answers } = selectedQuestion;
@@ -216,6 +255,6 @@ const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
   getQuestion: (id: string) => dispatch(getQuestion(id)),
 });
 
-const QuestionContainerConnected = connect(mapStateToProps, mapDispatchToProps)(QuestionContainer);
+const QuestionsContainer = connect(mapStateToProps, mapDispatchToProps)(Questions);
 
-export { QuestionContainerConnected };
+export { QuestionsContainer };

@@ -3,9 +3,8 @@ import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 
-import { GenericPage, LoadingPage } from '../../components';
+import { LoadingIndicator } from '../../components';
 import { EventState, RootState } from "../../models";
-import { findEvents } from '../../state/actions';
 import { HomeForm } from './home-form'
 
 import './home.css';
@@ -20,7 +19,6 @@ interface ComponentState {
 }
 
 interface ComponentDispatchProps {
-  findEvents: (id: string) => Promise<any>;
 }
 
 interface ComponentStateProps {
@@ -36,7 +34,7 @@ const initialState: ComponentState = {
   formEventId: ''
 }
 
-class HomeContainer extends Component<ComponentProps, ComponentState> {
+class Home extends Component<ComponentProps, ComponentState> {
 
   constructor(props: ComponentProps) {
     super(props);
@@ -71,12 +69,10 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
       const path = `/event/${redirectEventId}`;
       return <Redirect to={path} />
     } else if (eventState && eventState.loading) {
-      return <LoadingPage />
+      return <LoadingIndicator />
     } else {
       return (
-        <GenericPage>
-          <HomeForm formEventId={formEventId} formError={formError} formErrorMessage={formErrorMessage} onChange={this.handleChange} onSubmit={this.handleSubmit} />
-        </GenericPage>
+        <HomeForm formEventId={formEventId} formError={formError} formErrorMessage={formErrorMessage} onChange={this.handleChange} onSubmit={this.handleSubmit} />
       );
     }
   }
@@ -90,7 +86,6 @@ class HomeContainer extends Component<ComponentProps, ComponentState> {
     const { formEventId } = this.state;
 
     if (formEventId && formEventId.length == 6) {
-      this.props.findEvents(formEventId);
       this.setFormSubmittedState();
     } else {
       this.setFormErrorState('Event id must be a six character code');
@@ -123,9 +118,8 @@ const mapStateToProps = (state: RootState): ComponentStateProps => ({
 });
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
-  findEvents: (id: string) => dispatch(findEvents(id))
 });
 
-const HomeContainerConnected = connect(mapStateToProps, mapDispatchToProps)(HomeContainer);
+const HomeContainer = connect(mapStateToProps, mapDispatchToProps)(Home);
 
-export { HomeContainerConnected };
+export { HomeContainer };

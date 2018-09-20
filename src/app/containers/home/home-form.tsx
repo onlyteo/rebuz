@@ -2,8 +2,6 @@ import * as React from 'react';
 import { Component, ReactNode } from 'react';
 import { Form, FormProps, Icon, InputOnChangeData, Message } from 'semantic-ui-react'
 
-import './home.css';
-
 interface ComponentProps {
   formEventId: string;
   formError: boolean;

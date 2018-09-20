@@ -1,22 +1,29 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux'
+import { Route } from 'react-router';
+import { BrowserRouter as Router } from 'react-router-dom'
 
 import { store } from './state/store'
-import { Routes } from './core';
+import { ErrorHandler } from './containers/error';
+import { RootContainer } from './containers/root';
 
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
-const Root = () => {
+const App = () => {
     return (
         <Provider store={store}>
-            <Routes />
+            <ErrorHandler>
+                <Router>
+                    <Route component={RootContainer} />
+                </Router>
+            </ErrorHandler>
         </Provider>
     );
 }
 
 render(
-    <Root />,
+    <App />,
     document.getElementById('root'),
 );

@@ -4,8 +4,6 @@ import { Form, FormProps, Icon, InputOnChangeData, Message } from 'semantic-ui-r
 
 import { Question } from "../../models";
 
-import './question.css';
-
 interface ComponentProps {
   question: Question;
   formAnswer: string;
@@ -17,7 +15,7 @@ interface ComponentProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>, data: FormProps) => void;
 }
 
-class QuestionForm extends Component<ComponentProps> {
+class QuestionsForm extends Component<ComponentProps> {
 
   public render(): ReactNode {
     const { question, formAnswer, formWarning, formError, formWarningMessage, formErrorMessage, onChange, onSubmit } = this.props;
@@ -42,4 +40,4 @@ class QuestionForm extends Component<ComponentProps> {
   }
 }
 
-export { QuestionForm };
+export { QuestionsForm };

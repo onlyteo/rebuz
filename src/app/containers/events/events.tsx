@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 import { Button, Icon } from 'semantic-ui-react'
 
-import { GenericPage, NotificationPage, LoadingPage } from '../../components';
+import { NotificationMessage, LoadingIndicator } from '../../components';
 import { Event, EventState, RootState, Team, TeamState } from "../../models";
 import { findEvents, getTeam } from '../../state/actions';
 
-import './event.css';
+import './events.css';
 
 interface ComponentState {
   shouldRedirect: boolean;
@@ -34,7 +34,7 @@ const initialState: ComponentState = {
   shouldRedirect: false
 }
 
-class EventContainer extends Component<ComponentProps, ComponentState> {
+class Events extends Component<ComponentProps, ComponentState> {
 
   constructor(props: ComponentProps) {
     super(props);
@@ -77,12 +77,12 @@ class EventContainer extends Component<ComponentProps, ComponentState> {
       return <Redirect to={path} />
     } else if (eventId) {
       if (eventsLoading || teamsLoading) {
-        return <LoadingPage />
+        return <LoadingIndicator />
       } else if (selectedEvent && selectedTeam) {
         const { name: eventName } = selectedEvent;
         const { name: teamName, questions } = selectedTeam;
         return (
-          <GenericPage>
+          <div>
             <h3>Welcome to {eventName}</h3>
             <h4>Your are team {teamName}</h4>
             <p>
@@ -90,13 +90,13 @@ class EventContainer extends Component<ComponentProps, ComponentState> {
                 Start rebuz! <Icon name="arrow right" />
               </Button>
             </p>
-          </GenericPage>
+          </div>
         );
       } else {
-        return <NotificationPage error message='No event found for id' />
+        return <NotificationMessage error message='No event found for id' />
       }
     } else {
-      return <NotificationPage error message='No event id selected' />
+      return <NotificationMessage error message='No event id selected' />
     }
   }
 
@@ -116,6 +116,6 @@ const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
   getTeam: (id: string) => dispatch(getTeam(id))
 });
 
-const EventContainerConnected = connect(mapStateToProps, mapDispatchToProps)(EventContainer);
+const EventsContainer = connect(mapStateToProps, mapDispatchToProps)(Events);
 
-export { EventContainerConnected };
+export { EventsContainer };

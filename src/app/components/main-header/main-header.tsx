@@ -3,14 +3,11 @@ import { Component, ReactNode } from 'react';
 import { Header, Icon } from 'semantic-ui-react'
 
 interface ComponentProps {
+  title: string;
   subtitle?: string;
 }
 
 class MainHeader extends Component<ComponentProps> {
-
-  state = {
-    mainTitle: 'Rebuz'
-  }
 
   public render(): ReactNode {
     const title = this.processTitle();
@@ -25,12 +22,11 @@ class MainHeader extends Component<ComponentProps> {
   }
 
   private processTitle() {
-    const { subtitle } = this.props;
-    const { mainTitle } = this.state;
+    const { title, subtitle } = this.props;
     if (subtitle) {
-      return `${mainTitle} - ${subtitle}`;
+      return `${title} - ${subtitle}`;
     } else {
-      return mainTitle;
+      return `${title}`;
     }
   }
 }
