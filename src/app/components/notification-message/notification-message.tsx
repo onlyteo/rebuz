@@ -8,44 +8,80 @@ interface ComponentProps {
     info?: boolean;
     warning?: boolean;
     error?: boolean;
+    withLink?: boolean;
+}
+
+interface MessageProps {
+    message: string;
+    withLink?: boolean;
 }
 
 class NotificationMessage extends Component<ComponentProps> {
 
     public render(): ReactNode {
-        const { message, error, warning } = this.props;
+        const { message, error, warning, withLink } = this.props;
         if (error) {
-            return <ErrorMessage message={message} />
+            return <ErrorMessage message={message} withLink={withLink} />
         } else if (warning) {
-            return <WarningMessage message={message} />
+            return <WarningMessage message={message} withLink={withLink} />
         } else {
-            return <InfoMessage message={message} />
+            return <InfoMessage message={message} withLink={withLink} />
         }
     }
 }
 
-const InfoMessage: SFC<{ message: string }> = (props) => {
-    return (
-        <Message info><Icon name='info circle' /> {props.message}<br />
-            <Link to='/'><Icon name='home' />Go to home page</Link>
-        </Message>
-    );
+const InfoMessage: SFC<MessageProps> = (props) => {
+    const { message, withLink } = props;
+    if (withLink) {
+        return (
+            <Message info>
+                <Icon name='info circle' /> {message}<br /><br />
+                <Link to='/'><Icon name='home' />Go to home page</Link>
+            </Message>
+        );
+    } else {
+        return (
+            <Message info>
+                <Icon name='info circle' /> {message}
+            </Message>
+        );
+    }
 }
 
-const WarningMessage: SFC<{ message: string }> = (props) => {
-    return (
-        <Message warning><Icon name='warning sign' /> {props.message}<br />
-            <Link to='/'><Icon name='home' />Go to home page</Link>
-        </Message>
-    );
+const WarningMessage: SFC<MessageProps> = (props) => {
+    const { message, withLink } = props;
+    if (withLink) {
+        return (
+            <Message warning>
+                <Icon name='warning sign' /> {message}<br /><br />
+                <Link to='/'><Icon name='home' />Go to home page</Link>
+            </Message>
+        );
+    } else {
+        return (
+            <Message warning>
+                <Icon name='warning sign' /> {message}
+            </Message>
+        );
+    }
 }
 
-const ErrorMessage: SFC<{ message: string }> = (props) => {
-    return (
-        <Message error><Icon name='ban' /> {props.message}<br />
-            <Link to='/'><Icon name='home' />Go to home page</Link>
-        </Message>
-    );
+const ErrorMessage: SFC<MessageProps> = (props) => {
+    const { message, withLink } = props;
+    if (withLink) {
+        return (
+            <Message error>
+                <Icon name='ban' /> {message}<br /><br />
+                <Link to='/'><Icon name='home' />Go to home page</Link>
+            </Message>
+        );
+    } else {
+        return (
+            <Message error>
+                <Icon name='ban' /> {message}
+            </Message>
+        );
+    }
 }
 
 export { NotificationMessage };

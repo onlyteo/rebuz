@@ -1,29 +1,41 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux'
-import { Route } from 'react-router';
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Container, Segment } from 'semantic-ui-react'
 
 import { store } from './state/store'
+import { MainHeader } from './components';
 import { ErrorHandler } from './containers/error';
-import { RootContainer } from './containers/root';
+import { NotFoundContainer } from './containers/error';
+import { HomeContainer } from './containers/home';
+import { EventsContainer } from './containers/events';
 
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
-const App = () => {
+const Root = () => {
     return (
         <Provider store={store}>
             <ErrorHandler>
-                <Router>
-                    <Route component={RootContainer} />
-                </Router>
+                <Container>
+                    <MainHeader title='Rebuz' />
+                    <Segment vertical>
+                        <Router>
+                            <Switch>
+                                <Route path="/event/:eventId?" component={EventsContainer} />
+                                <Route path="/" exact component={HomeContainer} />
+                                <Route component={NotFoundContainer} />
+                            </Switch>
+                        </Router>
+                    </Segment>
+                </Container>
             </ErrorHandler>
         </Provider>
     );
 }
 
 render(
-    <App />,
+    <Root />,
     document.getElementById('root'),
 );

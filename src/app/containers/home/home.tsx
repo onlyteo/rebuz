@@ -3,15 +3,12 @@ import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 
-import { LoadingIndicator } from '../../components';
-import { EventState, RootState } from "../../models";
+import { RootState } from "../../models";
 import { HomeForm } from './home-form'
 
 import './home.css';
 
 interface ComponentState {
-  shouldRedirect: boolean;
-  redirectEventId?: string;
   formEventId: string;
   formSubmitted: boolean;
   formError: boolean;
@@ -22,13 +19,11 @@ interface ComponentDispatchProps {
 }
 
 interface ComponentStateProps {
-  eventState: EventState;
 }
 
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
 const initialState: ComponentState = {
-  shouldRedirect: false,
   formSubmitted: false,
   formError: false,
   formEventId: ''
@@ -41,35 +36,12 @@ class Home extends Component<ComponentProps, ComponentState> {
     this.state = initialState;
   }
 
-  componentDidMount() {
-  }
-
-  componentDidUpdate() {
-    const { formEventId, formSubmitted } = this.state;
-    const { eventState } = this.props;
-
-    if (formSubmitted && eventState && !eventState.loading) {
-      const { events } = eventState;
-
-      if (!events || events.length < 1) {
-        this.setFormErrorState(`No event found for id "${formEventId}"`);
-      } else if (events.length > 1) {
-        this.setFormErrorState(`More than one event found for id "${formEventId}"`);
-      } else {
-        this.setRedirectState(formEventId);
-      }
-    }
-  }
-
   public render(): ReactNode {
-    const { formEventId, shouldRedirect, redirectEventId, formError, formErrorMessage } = this.state
-    const { eventState } = this.props;
+    const { formEventId, formSubmitted, formError, formErrorMessage } = this.state
 
-    if (shouldRedirect) {
-      const path = `/event/${redirectEventId}`;
+    if (formSubmitted && !formError) {
+      const path = `/event/${formEventId}`;
       return <Redirect to={path} />
-    } else if (eventState && eventState.loading) {
-      return <LoadingIndicator />
     } else {
       return (
         <HomeForm formEventId={formEventId} formError={formError} formErrorMessage={formErrorMessage} onChange={this.handleChange} onSubmit={this.handleSubmit} />
@@ -92,11 +64,6 @@ class Home extends Component<ComponentProps, ComponentState> {
     }
   }
 
-  private setRedirectState = (formEventId: string) => {
-    const newState = { shouldRedirect: true, redirectEventId: formEventId, formError: false, formErrorMessage: undefined }
-    this.setState(newState);
-  }
-
   private setFormSubmittedState = () => {
     const newState = { formSubmitted: true, formError: false, formErrorMessage: undefined }
     this.setState(newState);
@@ -114,7 +81,6 @@ class Home extends Component<ComponentProps, ComponentState> {
 }
 
 const mapStateToProps = (state: RootState): ComponentStateProps => ({
-  eventState: state.events
 });
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
