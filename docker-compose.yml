@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  rebuz_mongo:
+    image: mongo:latest
+    container_name: rebuz_mongo
+    hostname: mongo
+    domainname: rebuz.no
+    ports:
+      - 27017:27017
+    networks:
+      rebuz:
+
+networks:
+  rebuz:

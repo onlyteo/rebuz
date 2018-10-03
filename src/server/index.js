@@ -1,28 +1,38 @@
 // Modules
-const express = require('express');
 const minimist = require('minimist');
-const events = require('./events/resource')
-const teams = require('./teams/resource')
-const questions = require('./questions/resource')
-// Variables
-const server = express();
-const isProduction = process.env.NODE_ENV === 'production';
-const args = minimist(process.argv.slice(2));
-const port = args.port || 8080;
-const host = args.host || '0.0.0.0';
+const db = require('./database');
+const server = require('./server');
 
-if (isProduction) {
-    server.use(express.static('dist'));
+// Variables
+const args = minimist(process.argv.slice(2));
+
+const config = {
+    mode: process.env.NODE_ENV || 'development',
+    server: {
+        host: args.host || '0.0.0.0',
+        port: args.port || 8080
+    },
+    database: {
+        protocol: 'mongodb',
+        host: 'localhost',
+        port: 27017,
+        database: 'rebuz'
+    }
 }
 
-// Configure backend
-server.use('/api/events', events);
-server.use('/api/teams', teams);
-server.use('/api/questions', questions);
-// Default route
-server.use((req, res) => {
-    res.status(404).send();
+// Start server
+db.connect(config, (err) => {
+    if (err) {
+        process.exit(1);
+    } else {
+        server.listen(config);
+    }
 });
 
-// Start server
-server.listen(port, host, () => console.log('Listening on ' + host + ':' + port + '!'));
+db.close((err) => {
+    if (err) {
+        process.exit(1);
+    } else {
+        process.exit(0);
+    }
+});

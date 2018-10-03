@@ -1,7 +1,7 @@
 // Modules
 const os = require('os');
 const express = require('express');
-const repository = require('./repository')
+const repository = require('../db/teams')
 // Variables
 const router = express.Router();
 
