@@ -7,11 +7,11 @@ const entities = [
         question: 'Hvor mange?',
         answers: [
             {
-                id: '7cZHWF',
-                answer: '5'
+                id: '1',
+                answer: '1'
             }
         ],
-        answerId: '7cZHWF'
+        answerId: '1'
     },
     {
         id: 'S0Cl65',
@@ -20,11 +20,11 @@ const entities = [
         question: 'Hvor langt?',
         answers: [
             {
-                id: '7cZHWF',
-                answer: '7'
+                id: '1',
+                answer: '2'
             }
         ],
-        answerId: '7cZHWF'
+        answerId: '1'
     },
     {
         id: '9vr7DR',
@@ -33,11 +33,11 @@ const entities = [
         question: '?',
         answers: [
             {
-                id: '7cZHWF',
-                answer: ''
+                id: '1',
+                answer: '3'
             }
         ],
-        answerId: '7cZHWF'
+        answerId: '1'
     },
     {
         id: 'msNR2Y',
@@ -46,11 +46,11 @@ const entities = [
         question: '?',
         answers: [
             {
-                id: '7cZHWF',
-                answer: ''
+                id: '1',
+                answer: '4'
             }
         ],
-        answerId: '7cZHWF'
+        answerId: '1'
     }
 ]
 

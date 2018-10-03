@@ -10,9 +10,11 @@ import { getQuestion } from '../../state/actions';
 import { QuestionsForm } from './questions-form';
 
 import './questions.css';
+import { Redirect } from 'react-router';
 
 interface ComponentState {
   currentQuestionId?: string;
+  completeEvent: boolean;
   formQuestionAnswer: string;
   formSubmit: boolean;
   formWarning: boolean;
@@ -34,6 +36,7 @@ interface ComponentStateProps {
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
 const initialState: ComponentState = {
+  completeEvent: false,
   formQuestionAnswer: '',
   formSubmit: false,
   formWarning: false,
@@ -67,8 +70,8 @@ class Questions extends Component<ComponentProps, ComponentState> {
   }
 
   public render(): ReactNode {
-    const { currentQuestionId, formSubmit, formQuestionAnswer, formWarning, formError, formMessage } = this.state
-    const { questionState } = this.props;
+    const { currentQuestionId, completeEvent, formSubmit, formQuestionAnswer, formWarning, formError, formMessage } = this.state
+    const { match, questionState } = this.props;
     const { question, loading } = questionState;
 
     if (!currentQuestionId) {
@@ -77,6 +80,10 @@ class Questions extends Component<ComponentProps, ComponentState> {
       return <LoadingIndicator />
     } else if (!question) {
       return <NotificationMessage error message={`No question found for id "${currentQuestionId}"`} />
+    } else if (completeEvent) {
+      const { eventId } = match.params;
+      const path = `/event/${eventId}/success`;
+      return <Redirect to={path} />
     } else if (formSubmit && this.isCorrectAnswer()) {
       return (
         <div>
@@ -122,7 +129,7 @@ class Questions extends Component<ComponentProps, ComponentState> {
 
   private handleClick = () => {
     const { currentQuestionId } = this.state;
-    const { history, teamState } = this.props;
+    const { history, match, teamState } = this.props;
     const { teams } = teamState;
 
     if (currentQuestionId && teams && teams.length == 1) {
@@ -132,18 +139,17 @@ class Questions extends Component<ComponentProps, ComponentState> {
       const index = questions.indexOf(currentQuestionId);
       const nextIndex = index + 1;
       if (nextIndex < questions.length) {
-        console.log('Next index' + nextIndex);
-        const { eventId } = this.props.match.params;
+        const { eventId } = match.params;
         const nextId = questions[nextIndex];
-        const newState = { currentQuestionId: nextId, formQuestionAnswer: '', formWarning: false, formError: false }
-        this.setState(newState);
         const path = `/event/${eventId}/question/${nextId}`;
         history.push(path);
+        const newState = { ...initialState, currentQuestionId: nextId }
+        this.setState(newState);
       } else {
-        console.log('Oh no, next index: ' + nextIndex);
+        const newState = { ...initialState, completeEvent: true }
+        this.setState(newState);
       }
     } else {
-      console.log('Oh no, missing team');
     }
   }
 

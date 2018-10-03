@@ -1,7 +1,8 @@
 export interface Event {
     id: string,
     name: string,
-    teams: string[]
+    teams: string[],
+    successMessage: string
 }
 
 export interface EventState {

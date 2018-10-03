@@ -59,8 +59,8 @@ class Teams extends Component<ComponentProps, ComponentState> {
       const { name: teamName } = team;
       return (
         <div>
-          <h3>Welcome to {eventName}!</h3>
-          <h4>Your are team {teamName}</h4>
+          <h3>Welcome to <i>{eventName}!</i></h3>
+          <h4>Your are team <i>{teamName}</i></h4>
           <p>
             <Button primary onClick={() => this.handleClick(team)}>
               Start rebuz! <Icon name="arrow right" />

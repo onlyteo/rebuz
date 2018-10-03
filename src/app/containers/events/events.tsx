@@ -7,6 +7,7 @@ import { EventState, RootState, TeamState } from "../../models";
 import { findEvents, getTeam } from '../../state/actions';
 import { TeamsContainer } from '../teams';
 import { QuestionsContainer } from '../questions';
+import { SuccessContainer } from '../success';
 
 import './events.css';
 
@@ -40,6 +41,7 @@ class Events extends Component<ComponentProps> {
       <Switch>
         <Route exact path="/event/:eventId?" component={TeamsContainer} />
         <Route exact path="/event/:eventId?/question/:questionId?" component={QuestionsContainer} />
+        <Route exact path="/event/:eventId?/success" component={SuccessContainer} />
       </Switch>
     );
   }

@@ -8,7 +8,8 @@ const entities = [
             'kHcd7G',
             '8BhSgB',
             'j0J2bn'
-        ]
+        ],
+        successMessage: 'Du har fullført denne rebuz!'
     }
 ]
 
