@@ -88,6 +88,7 @@ module.exports = {
     devServer: {
         port: webPort,
         historyApiFallback: true,
+        disableHostCheck: true,
         proxy: {
             '/api': apiUrl
         }
