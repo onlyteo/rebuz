@@ -88,7 +88,7 @@ module.exports = {
     devServer: {
         port: webPort,
         historyApiFallback: true,
-        disableHostCheck: true,
+        public: 'rebuz.no',
         proxy: {
             '/api': apiUrl
         }
