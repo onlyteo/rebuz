@@ -1,7 +1,7 @@
 [
     {
-        "id": "ch3x00",
-        "name": "Red",
+        "id": "ch3xYX",
+        "name": "Flaps",
         "questions": [
             "5oCnKZ",
             "S0Cl65",
@@ -11,17 +11,17 @@
     },
     {
         "id": "kHcd7G",
-        "name": "Blue",
+        "name": "Haleror",
         "locations": []
     },
     {
         "id": "8BhSgB",
-        "name": "Green",
+        "name": "Landingslys",
         "questions": []
     },
     {
-        "id": "j0J2bn",
-        "name": "Yellow",
+        "id": "jSJ2bn",
+        "name": "Cockpit",
         "questions": []
     }
 ]

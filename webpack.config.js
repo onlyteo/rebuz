@@ -12,10 +12,13 @@ const publicDir = 'public';
 const outputPath = path.resolve(__dirname, outputDir);
 const indexFile = path.resolve(__dirname, publicDir, 'index.html');
 const favIconFile = path.resolve(__dirname, publicDir, 'favicon.ico');
+const webHost = process.env.NODE_WEB_HOST || 'localhost';
 const webPort = process.env.NODE_WEB_PORT || 3000;
 const apiHost = process.env.NODE_HOST || 'localhost';
 const apiPort = process.env.NODE_API_PORT || 8080;
 const apiUrl = `http://${apiHost}:${apiPort}`;
+const publicPort = webPort == 80 ? '' : `:${webPort}`;
+const publicHost = `${webHost}${publicPort}`;
 
 module.exports = {
     entry: {
@@ -88,7 +91,7 @@ module.exports = {
     devServer: {
         port: webPort,
         historyApiFallback: true,
-        public: 'rebuz.no',
+        public: publicHost,
         proxy: {
             '/api': apiUrl
         }

@@ -16,7 +16,9 @@ class MainHeader extends Component<ComponentProps> {
 
     return (
       <Header as='h1'>
-        <Icon name='map' />{title}
+        <a className="header-link" href="/">
+          <Icon name='map' />{title}
+        </a>
       </Header>
     );
   }
