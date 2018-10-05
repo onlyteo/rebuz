@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
-import { Button, Icon, Message } from 'semantic-ui-react'
 import * as _ from 'lodash';
 
 import { NotificationMessage, LoadingIndicator } from '../../components';
 import { QuestionState, RootState, TeamState } from "../../models";
 import { getQuestion } from '../../state/actions';
 import { QuestionsForm } from './questions-form';
+import { QuestionsSuccess } from './questions-success';
 
 import './questions.css';
 import { Redirect } from 'react-router';
@@ -85,18 +85,10 @@ class Questions extends Component<ComponentProps, ComponentState> {
       const path = `/event/${eventId}/success`;
       return <Redirect to={path} />
     } else if (formSubmit && this.isCorrectAnswer()) {
-      const { details: detailsText, question: questionText } = question;
       return (
-        <div>
-          <h3>{detailsText}</h3>
-          <h4>{questionText}</h4>
-          <Message info><Icon name='thumbs up' /> Correct!</Message>
-          <p>
-            <Button primary onClick={() => this.handleClick()}>
-              Next question! <Icon name="arrow right" />
-            </Button>
-          </p>
-        </div>
+        <QuestionsSuccess
+          question={question}
+          onClick={() => this.handleClick()} />
       );
     } else {
       return (

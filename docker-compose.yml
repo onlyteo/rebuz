@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  rebuz_node:
+    build: .
+    image: rebuz_node:latest
+    container_name: rebuz_node
+    hostname: node
+    domainname: rebuz.no
+    environment:
+      - MONGO_DB_HOST=rebuz_mongo
+    ports:
+      - 3000:3000
+    networks:
+      rebuz:
+
   rebuz_mongo:
     image: mongo:latest
     container_name: rebuz_mongo

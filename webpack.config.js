@@ -12,6 +12,10 @@ const publicDir = 'public';
 const outputPath = path.resolve(__dirname, outputDir);
 const indexFile = path.resolve(__dirname, publicDir, 'index.html');
 const favIconFile = path.resolve(__dirname, publicDir, 'favicon.ico');
+const webPort = process.env.NODE_WEB_PORT || 3000;
+const apiHost = process.env.NODE_HOST || 'localhost';
+const apiPort = process.env.NODE_API_PORT || 8080;
+const apiUrl = `http://${apiHost}:${apiPort}`;
 
 module.exports = {
     entry: {
@@ -82,10 +86,10 @@ module.exports = {
     },
     devtool: 'source-map',
     devServer: {
-        port: 3000,
+        port: webPort,
         historyApiFallback: true,
         proxy: {
-            '/api': 'http://localhost:8080'
+            '/api': apiUrl
         }
     },
     plugins: [

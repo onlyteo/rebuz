@@ -9,14 +9,14 @@ const args = minimist(process.argv.slice(2));
 const config = {
     mode: process.env.NODE_ENV || 'development',
     server: {
-        host: args.host || '0.0.0.0',
-        port: args.port || 8080
+        host: process.env.NODE_API_HOST || '0.0.0.0',
+        port: process.env.NODE_API_PORT || 8080
     },
     database: {
-        protocol: 'mongodb',
-        host: 'localhost',
-        port: 27017,
-        database: 'rebuz',
+        protocol: process.env.MONGO_DB_PROTOCOL || 'mongodb',
+        host: process.env.MONGO_DB_HOST || 'localhost',
+        port: process.env.MONGO_DB_PORT || 27017,
+        database: process.env.MONGO_DB_DATABASE || 'rebuz',
         options: {
             useNewUrlParser: true
         }
