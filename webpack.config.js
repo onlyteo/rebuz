@@ -14,11 +14,20 @@ const indexFile = path.resolve(__dirname, publicDir, 'index.html');
 const favIconFile = path.resolve(__dirname, publicDir, 'favicon.ico');
 const webHost = process.env.NODE_WEB_HOST || 'localhost';
 const webPort = process.env.NODE_WEB_PORT || 3000;
-const apiHost = process.env.NODE_HOST || 'localhost';
+const apiHost = process.env.NODE_API_HOST || 'localhost';
 const apiPort = process.env.NODE_API_PORT || 8080;
 const apiUrl = `http://${apiHost}:${apiPort}`;
 const publicPort = webPort == 80 ? '' : `:${webPort}`;
 const publicHost = `${webHost}${publicPort}`;
+
+console.log(`#########################################################################`);
+console.log(`##   NODE_WEB_HOST: ${webHost}`);
+console.log(`##   NODE_WEB_PORT: ${webPort}`);
+console.log(`##   NODE_API_HOST: ${apiHost}`);
+console.log(`##   NODE_API_PORT: ${apiPort}`);
+console.log(`##   NODE_API_URL:  ${apiUrl}`);
+console.log(`##   PUBLIC_HOST:   ${publicHost}`);
+console.log(`#########################################################################`);
 
 module.exports = {
     entry: {
@@ -94,7 +103,8 @@ module.exports = {
         public: publicHost,
         proxy: {
             '/api': apiUrl
-        }
+        },
+        open: false
     },
     plugins: [
         new webpack.EnvironmentPlugin({
