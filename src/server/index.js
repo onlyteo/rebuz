@@ -1,7 +1,7 @@
 // Modules
 const minimist = require('minimist');
-const db = require('./database');
-const server = require('./server');
+const db = require('./core/database');
+const server = require('./core/server');
 
 // Variables
 const args = minimist(process.argv.slice(2));
@@ -16,7 +16,10 @@ const config = {
         protocol: 'mongodb',
         host: 'localhost',
         port: 27017,
-        database: 'rebuz'
+        database: 'rebuz',
+        options: {
+            useNewUrlParser: true
+        }
     }
 }
 
@@ -26,13 +29,5 @@ db.connect(config, (err) => {
         process.exit(1);
     } else {
         server.listen(config);
-    }
-});
-
-db.close((err) => {
-    if (err) {
-        process.exit(1);
-    } else {
-        process.exit(0);
     }
 });

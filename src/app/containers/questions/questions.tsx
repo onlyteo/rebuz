@@ -85,8 +85,11 @@ class Questions extends Component<ComponentProps, ComponentState> {
       const path = `/event/${eventId}/success`;
       return <Redirect to={path} />
     } else if (formSubmit && this.isCorrectAnswer()) {
+      const { details: detailsText, question: questionText } = question;
       return (
         <div>
+          <h3>{detailsText}</h3>
+          <h4>{questionText}</h4>
           <Message info><Icon name='thumbs up' /> Correct!</Message>
           <p>
             <Button primary onClick={() => this.handleClick()}>

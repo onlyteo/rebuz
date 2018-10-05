@@ -1,17 +1,4 @@
-
-const entities = [
-    {
-        id: 'A2zXvZ',
-        name: 'Målfrid\'s rebuz',
-        teams: [
-            'ch3x00',
-            'kHcd7G',
-            '8BhSgB',
-            'j0J2bn'
-        ],
-        successMessage: 'Du har fullført denne rebuz!'
-    }
-]
+const entities = require('../data/events.json');
 
 exports.find = (team) => {
     if (team) {

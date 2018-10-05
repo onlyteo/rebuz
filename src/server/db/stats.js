@@ -1,19 +1,22 @@
-const db = require('../database');
-
-connect = () => {
-    const connection = db.get();
-    return connection.collection('stats');
-}
+const moment = require('moment');
+const Stats = require('../model/stats');
 
 exports.init = () => {
 }
 
-exports.find = (team, handler) => {
-    const collection = connect();
-    collection.find({ team: team }).toArray(handler());
+exports.get = (query, handler) => {
+    Stats.findOne(query, handler);
+};
+
+exports.find = (query, handler) => {
+    Stats.find(query, handler);
 };
 
 exports.save = (data, handler) => {
-    const collection = connect();
-    collection.insert(data, handler());
+    let stats = new Stats(data);
+    stats.save(handler);
+}
+
+exports.update = (data, handler) => {
+    Stats.updateOne(data, { modified: moment().unix() }, handler);
 }

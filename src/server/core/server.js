@@ -1,10 +1,10 @@
 // Modules
 const express = require('express');
 const bodyParser = require('body-parser');
-const events = require('./api/events');
-const teams = require('./api/teams');
-const questions = require('./api/questions');
-const stats = require('./api/stats');
+const events = require('../api/events');
+const teams = require('../api/teams');
+const questions = require('../api/questions');
+const stats = require('../api/stats');
 
 // Variables
 const server = express();
