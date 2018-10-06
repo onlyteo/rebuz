@@ -3,6 +3,7 @@ import { Component, ReactNode } from 'react';
 import { Button, ButtonProps, Icon, Message } from 'semantic-ui-react'
 
 import { Question } from "../../models";
+import { QuestionsHeader } from "./questions-header";
 
 interface ComponentProps {
   question: Question;
@@ -17,8 +18,7 @@ class QuestionsSuccess extends Component<ComponentProps> {
 
     return (
       <div>
-        <h3>{detailsText}</h3>
-        <h4>{questionText}</h4>
+        <QuestionsHeader details={detailsText} question={questionText} />
         <Message info><Icon name='thumbs up' /> Correct!</Message>
         <p>
           <Button primary onClick={onClick}>

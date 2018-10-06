@@ -3,6 +3,7 @@ import { Component, ReactNode } from 'react';
 import { Form, FormProps, Icon, InputOnChangeData, Message } from 'semantic-ui-react'
 
 import { Question } from "../../models";
+import { QuestionsHeader } from "./questions-header";
 
 interface ComponentProps {
   question: Question;
@@ -23,8 +24,7 @@ class QuestionsForm extends Component<ComponentProps> {
 
     return (
       <div>
-        <h3>{detailsText}</h3>
-        <h4>{questionText}</h4>
+        <QuestionsHeader details={detailsText} question={questionText} />
         <Form onSubmit={onSubmit} warning={formWarning} error={formError}>
           <Form.Group>
             <Form.Input placeholder='Enter answer...' value={formAnswer} onChange={onChange} error={formError} />
