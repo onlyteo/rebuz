@@ -55,11 +55,11 @@ class Teams extends Component<ComponentProps, ComponentState> {
     } else {
       const event = this.getSelectedEvent();
       const team = this.getSelectedTeam();
-      const { name: eventName } = event;
+      const { welcomeMessage } = event;
       const { name: teamName } = team;
       return (
         <div>
-          <h3>Welcome to <i>{eventName}!</i></h3>
+          <h3>{welcomeMessage}</h3>
           <h4>Your are team <i>{teamName}</i></h4>
           <p>
             <Button primary onClick={() => this.handleClick(team)}>

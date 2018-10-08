@@ -1,6 +1,6 @@
 export interface Event {
     id: string,
-    name: string,
+    welcomeMessage: string,
     teams: string[],
     successMessage: string
 }

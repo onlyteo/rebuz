@@ -10,6 +10,7 @@ import { ErrorHandler } from './containers/error';
 import { NotFoundContainer } from './containers/error';
 import { HomeContainer } from './containers/home';
 import { EventsContainer } from './containers/events';
+import { StatsContainer } from './containers/stats';
 
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
@@ -23,6 +24,7 @@ const Root = () => {
                     <Segment vertical>
                         <Router>
                             <Switch>
+                                <Route path="/stats" component={StatsContainer} />
                                 <Route path="/event/:eventId?" component={EventsContainer} />
                                 <Route path="/" exact component={HomeContainer} />
                                 <Route component={NotFoundContainer} />

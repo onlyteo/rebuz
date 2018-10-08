@@ -163,7 +163,7 @@ class Questions extends Component<ComponentProps, ComponentState> {
       const newState = { formSubmit: true, formWarning: false, formError: false }
       this.setState(newState);
     } else {
-      this.setFormWarning('You answer is incorrect, try again');
+      this.setFormWarning('Your answer is incorrect, try again');
     }
   }
 

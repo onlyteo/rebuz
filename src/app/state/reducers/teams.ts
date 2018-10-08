@@ -8,18 +8,19 @@ export function get(state: TeamState = initialTeamState, action: GetTeamAction):
         }
 
         case GetTeamActionType.SUCCESS: {
-            const { teams } = state;
+            let { teams } = state;
             const { payload } = action;
 
-            let updatedTeams = teams;
-            let index = updatedTeams.indexOf(payload);
-            if (~index) {
-                updatedTeams[index] = payload;
-            } else {
-                updatedTeams = updatedTeams.concat(payload);
+            if (payload) {
+                let index = teams.indexOf(payload);
+                if (~index) {
+                    teams[index] = payload;
+                } else {
+                    teams = teams.concat(payload);
+                }
             }
 
-            return { ...initialTeamState, teams: updatedTeams }
+            return { ...initialTeamState, teams: teams }
         }
 
         default: {

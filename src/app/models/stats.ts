@@ -1,7 +1,9 @@
 export interface Stats {
     event: string,
     team: string,
-    question: string
+    question: string,
+    created: number,
+    modified: number
 }
 
 export interface StatsState {
@@ -10,7 +12,7 @@ export interface StatsState {
     error?: any;
 }
 
-export const initialEventState: StatsState = {
+export const initialStatsState: StatsState = {
     loading: false,
     stats: []
 }
