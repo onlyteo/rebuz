@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import * as _ from 'lodash';
 
 import { NotificationMessage, LoadingIndicator } from '../../components';
-import { QuestionState, RootState, TeamState } from "../../models";
-import { getQuestion } from '../../state/actions';
+import { EventState, QuestionState, RootState, Team, TeamState } from "../../models";
+import { getQuestion, saveStats } from '../../state/actions';
 import { QuestionsForm } from './questions-form';
 import { QuestionsSuccess } from './questions-success';
 
@@ -24,11 +24,13 @@ interface ComponentState {
 
 interface ComponentDispatchProps {
   getQuestion: (id: string) => Promise<any>;
+  saveStats: (eventId: string, teamId: string, questionId: string) => Promise<any>;
 }
 
 interface ComponentStateProps {
   match?: any;
   history?: any;
+  eventState: EventState;
   teamState: TeamState;
   questionState: QuestionState;
 }
@@ -71,8 +73,11 @@ class Questions extends Component<ComponentProps, ComponentState> {
 
   public render(): ReactNode {
     const { currentQuestionId, completeEvent, formSubmit, formQuestionAnswer, formWarning, formError, formMessage } = this.state
-    const { match, questionState } = this.props;
+    const { match, questionState, teamState } = this.props;
+    const { eventId } = match.params;
     const { question, loading } = questionState;
+    const { teamMap } = teamState;
+    const team = teamMap[eventId];
 
     if (!currentQuestionId) {
       return <NotificationMessage error message='No question id selected' />
@@ -81,14 +86,13 @@ class Questions extends Component<ComponentProps, ComponentState> {
     } else if (!question) {
       return <NotificationMessage error message={`No question found for id "${currentQuestionId}"`} />
     } else if (completeEvent) {
-      const { eventId } = match.params;
       const path = `/event/${eventId}/success`;
       return <Redirect to={path} />
     } else if (formSubmit && this.isCorrectAnswer()) {
       return (
         <QuestionsSuccess
           question={question}
-          onClick={() => this.handleClick()} />
+          onClick={() => this.handleClick(eventId, team)} />
       );
     } else {
       return (
@@ -122,21 +126,22 @@ class Questions extends Component<ComponentProps, ComponentState> {
     }
   }
 
-  private handleClick = () => {
+  private handleClick = (currentEventId: string, team: Team) => {
     const { currentQuestionId } = this.state;
-    const { history, match, teamState } = this.props;
-    const { teams } = teamState;
+    const { history, eventState } = this.props;
+    const { events } = eventState;
+    const event = events[0];
 
-    if (currentQuestionId && teams && teams.length == 1) {
-      const team = teams[0];
-      const { questions } = team;
+    if (currentQuestionId && team) {
+      const { id: teamId, questions } = team;
+      const { id: eventId } = event;
 
       const index = questions.indexOf(currentQuestionId);
       const nextIndex = index + 1;
       if (nextIndex < questions.length) {
-        const { eventId } = match.params;
+        this.props.saveStats(eventId, teamId, currentQuestionId);
         const nextId = questions[nextIndex];
-        const path = `/event/${eventId}/question/${nextId}`;
+        const path = `/event/${currentEventId}/question/${nextId}`;
         history.push(path);
         const newState = { ...initialState, currentQuestionId: nextId }
         this.setState(newState);
@@ -144,7 +149,6 @@ class Questions extends Component<ComponentProps, ComponentState> {
         const newState = { ...initialState, completeEvent: true }
         this.setState(newState);
       }
-    } else {
     }
   }
 
@@ -179,12 +183,14 @@ class Questions extends Component<ComponentProps, ComponentState> {
 }
 
 const mapStateToProps = (state: RootState): ComponentStateProps => ({
+  eventState: state.events,
   teamState: state.teams,
   questionState: state.question
 });
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
-  getQuestion: (id: string) => dispatch(getQuestion(id))
+  getQuestion: (id: string) => dispatch(getQuestion(id)),
+  saveStats: (eventId: string, teamId: string, questionId: string) => dispatch(saveStats(eventId, teamId, questionId))
 });
 
 const QuestionsContainer = connect(mapStateToProps, mapDispatchToProps)(Questions);

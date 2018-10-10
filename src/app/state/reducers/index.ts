@@ -9,11 +9,11 @@ import { RootState } from '../../models';
 const { reducer: eventsReducer } = events;
 const { get: getTeam } = teams;
 const { get: getQestion } = questions;
-const { find: findStats } = stats;
+const { reducer: statsReducer } = stats;
 
 export const rootReducer = combineReducers<RootState>({
     events: eventsReducer,
     teams: getTeam,
     question: getQestion,
-    stats: findStats
+    stats: statsReducer
 });

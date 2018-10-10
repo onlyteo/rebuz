@@ -1,4 +1,3 @@
-const moment = require('moment');
 const Stats = require('../model/stats');
 
 exports.init = () => {
@@ -18,5 +17,6 @@ exports.save = (data, handler) => {
 }
 
 exports.update = (data, handler) => {
-    Stats.updateOne(data, { modified: moment().unix() }, handler);
+    let milliseconds = (new Date).getTime();
+    Stats.updateOne(data, { modified: milliseconds }, handler);
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
+import { Table } from 'semantic-ui-react'
 
 import { RootState, EventState, StatsState, TeamState } from "../../models";
 import { findStats, getEvent, getTeam } from '../../state/actions';
@@ -66,43 +67,52 @@ class Stats extends Component<ComponentProps, ComponentState> {
     const { eventState, statsState, teamState } = this.props;
 
     if (formSubmitted && !formError) {
-      const { loading: eventsLoading, eventMap } = eventState;
+      const { loading: eventsLoading, events, eventMap } = eventState;
+      const { loading: teamLoading, teams, teamMap } = teamState;
       const { loading: statsLoading, stats } = statsState;
-      const { loading: teamLoading, teamMap } = teamState;
-      if ((eventState && eventsLoading) || (statsState && statsLoading) || (teamState && teamLoading)) {
+      if (eventsLoading || statsLoading || teamLoading) {
         return <LoadingIndicator />
-      } else if (statsState && stats) {
+      } else if (events && events.length && stats && stats.length && teams && teams.length) {
         const event = eventMap[formEventId];
         const { welcomeMessage } = event;
+        const statList = stats.map((stat) => {
+          const { team: teamId, question: questionId, modified } = stat;
+          const team = teamMap[teamId];
+          const { name: teamName, questions } = team;
+          const questionNumber = questions.indexOf(questionId) + 1;
+          const modifiedTime = new Date(0);
+          modifiedTime.setUTCSeconds(modified);
+          const modifiedTimeString = modifiedTime.toLocaleString('nb-NO');
+          return {
+            teamName: teamName,
+            questionNumber: questionNumber,
+            modifiedTime: modifiedTimeString
+          };
+        });
         return (
           <div>
             <h3>{welcomeMessage}</h3>
-            <table className='bordered'>
-              <thead>
-                <tr>
-                  <th className='cell bordered'>Team</th>
-                  <th className='cell bordered'>Question</th>
-                  <th className='cell bordered'>Last modified</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.map((stat, index) => {
-                  const { team: teamId, question: questionId, modified } = stat;
-                  const team = teamMap[teamId];
-                  const { name, questions } = team;
-                  const questionNumber = questions.indexOf(questionId) + 1;
-                  const modifiedTime = new Date(modified);
-                  const modifiedTimeString = modifiedTime.toLocaleString('nb-NO');
+            <Table celled>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Team</Table.HeaderCell>
+                  <Table.HeaderCell>Question</Table.HeaderCell>
+                  <Table.HeaderCell>Last modified</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {statList.sort().map((stat, index) => {
+                  const { teamName, questionNumber, modifiedTime } = stat;
                   return (
-                    <tr key={index}>
-                      <td className='cell bordered'>{name ? name : 'Unknown'}</td>
-                      <td className='cell bordered'>{questionNumber}</td>
-                      <td className='cell bordered'>{modifiedTimeString}</td>
-                    </tr>
+                    <Table.Row key={index}>
+                      <Table.Cell>{teamName}</Table.Cell>
+                      <Table.Cell>{questionNumber}</Table.Cell>
+                      <Table.Cell>{modifiedTime}</Table.Cell>
+                    </Table.Row>
                   )
                 })}
-              </tbody>
-            </table>
+              </Table.Body>
+            </Table>
           </div>
         );
       } else {
