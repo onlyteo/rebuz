@@ -20,9 +20,11 @@ export interface Question {
 export interface QuestionState {
     loading: boolean;
     question?: Question;
+    questionMap: any;
     error?: any;
 }
 
 export const initialQuestionState: QuestionState = {
-    loading: false
+    loading: false,
+    questionMap: {}
 }

@@ -4,12 +4,13 @@ import { GetTeamAction, GetTeamActionType } from "../actions";
 export function get(state: TeamState = initialTeamState, action: GetTeamAction): TeamState {
     switch (action.type) {
         case GetTeamActionType.LOADING: {
-            return { ...state, loading: action.loading };
+            const { loading } = action;
+            return { ...state, loading: loading };
         }
 
         case GetTeamActionType.SUCCESS: {
-            let { teams } = state;
             const { payload } = action;
+            let { teams, teamMap } = state;
 
             if (payload) {
                 let index = teams.indexOf(payload);
@@ -18,9 +19,15 @@ export function get(state: TeamState = initialTeamState, action: GetTeamAction):
                 } else {
                     teams = teams.concat(payload);
                 }
+                teamMap[payload.id] = payload;
             }
 
-            return { ...initialTeamState, teams: teams }
+            return { ...initialTeamState, teams: teams, teamMap: teamMap };
+        }
+
+        case GetTeamActionType.ERROR: {
+            const { error } = action;
+            return { ...initialTeamState, error: error };
         }
 
         default: {

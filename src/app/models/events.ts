@@ -8,10 +8,12 @@ export interface Event {
 export interface EventState {
     loading: boolean;
     events: Event[];
+    eventMap: any;
     error?: any;
 }
 
 export const initialEventState: EventState = {
     loading: false,
-    events: []
+    events: [],
+    eventMap: {}
 }

@@ -6,9 +6,14 @@ import * as questions from './questions';
 import * as stats from './stats';
 import { RootState } from '../../models';
 
+const { reducer: eventsReducer } = events;
+const { get: getTeam } = teams;
+const { get: getQestion } = questions;
+const { find: findStats } = stats;
+
 export const rootReducer = combineReducers<RootState>({
-    events: events.find,
-    teams: teams.get,
-    question: questions.get,
-    stats: stats.find
+    events: eventsReducer,
+    teams: getTeam,
+    question: getQestion,
+    stats: findStats
 });

@@ -4,11 +4,22 @@ import { GetQuestionAction, GetQuestionActionType } from "../actions";
 export function get(state: QuestionState = initialQuestionState, action: GetQuestionAction): QuestionState {
     switch (action.type) {
         case GetQuestionActionType.LOADING: {
-            return { ...state, loading: action.loading };
+            const { loading } = action;
+            return { ...state, loading: loading };
         }
 
         case GetQuestionActionType.SUCCESS: {
-            return { ...initialQuestionState, question: action.payload }
+            const { payload } = action;
+            let { questionMap } = state;
+            if (payload) {
+                questionMap[payload.id] = payload;
+            }
+            return { ...initialQuestionState, question: payload, questionMap: questionMap };
+        }
+
+        case GetQuestionActionType.ERROR: {
+            const { error } = action;
+            return { ...initialQuestionState, error: error };
         }
 
         default: {
