@@ -1,4 +1,5 @@
 const Stats = require('../model/stats');
+const utils = require('../core/utils');
 
 exports.init = () => {
 }
@@ -17,6 +18,5 @@ exports.save = (data, handler) => {
 }
 
 exports.update = (data, handler) => {
-    let milliseconds = (new Date).getTime();
-    Stats.updateOne(data, { modified: milliseconds }, handler);
+    Stats.updateOne(data, { modified: utils.epochSeconds() }, handler);
 }

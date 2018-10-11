@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { Button, Icon } from 'semantic-ui-react'
 
-import { NotificationMessage, LoadingIndicator } from '../../components';
+import { defaultLink, NotificationMessage, LoadingIndicator } from '../../components';
 import { Event, EventState, RootState, Team, TeamState } from "../../models";
 
 import './teams.css';
@@ -40,18 +40,18 @@ class Teams extends Component<ComponentProps, ComponentState> {
     const { currentQuestionId } = this.state;
 
     if (!eventId) {
-      return <NotificationMessage error withLink message='No event id selected' />
+      return <NotificationMessage error link={defaultLink} message='No event id selected' />
     } else if (currentQuestionId) {
       const path = `/event/${eventId}/question/${currentQuestionId}`;
       return <Redirect to={path} />
     } else if (this.isLoading()) {
       return <LoadingIndicator />
     } else if (this.isNoEventsFound()) {
-      return <NotificationMessage error withLink message={`No event found for id "${eventId}"`} />
+      return <NotificationMessage error link={defaultLink} message={`No event found for id "${eventId}"`} />
     } else if (this.isMultipleEventsFound()) {
-      return <NotificationMessage error withLink message={`Multiple events found for id "${eventId}"`} />
+      return <NotificationMessage error link={defaultLink} message={`Multiple events found for id "${eventId}"`} />
     } else if (this.isNoQuestionsFound()) {
-      return <NotificationMessage error withLink message={`No questions found for event "${eventId}"`} />
+      return <NotificationMessage error link={defaultLink} message={`No questions found for event "${eventId}"`} />
     } else {
       const event = this.getSelectedEvent();
       const team = this.getSelectedTeam();

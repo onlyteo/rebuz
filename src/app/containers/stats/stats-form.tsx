@@ -20,7 +20,7 @@ class StatsForm extends Component<ComponentProps> {
         <Form.Group>
           <Form.Input placeholder='Enter rebuz id...' value={formEventId} onChange={onChange} error={formError} />
           <Form.Button primary>
-            Find <Icon name="arrow right" />
+            Find stats <Icon name="arrow right" />
           </Form.Button>
         </Form.Group>
         <Message error><Icon name='ban' /> {formErrorMessage}</Message>
