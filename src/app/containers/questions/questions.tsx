@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
+import { CheckboxProps } from 'semantic-ui-react'
 import * as _ from 'lodash';
 
 import { NotificationMessage, LoadingIndicator } from '../../components';
-import { EventState, QuestionState, RootState, Team, TeamState } from "../../models";
+import { EventState, QuestionState, QuestionType, RootState, Team, TeamState } from "../../models";
 import { getQuestion, saveStats } from '../../state/actions';
 import { QuestionsForm } from './questions-form';
 import { QuestionsSuccess } from './questions-success';
@@ -103,7 +104,8 @@ class Questions extends Component<ComponentProps, ComponentState> {
           formError={formError}
           formErrorMessage={formMessage}
           formWarningMessage={formMessage}
-          onChange={this.handleChange}
+          onInputChange={this.onInputChange}
+          onRadioChange={this.onRadioChange}
           onSubmit={this.handleSubmit} />
       );
     }
@@ -117,12 +119,21 @@ class Questions extends Component<ComponentProps, ComponentState> {
     if (!question) {
       return false;
     } else {
-      const { answerId, answers } = question;
+      const { type, answerId, answers } = question;
 
-      const correctAnswer = answers.find(answer => answer.id == answerId);
-      const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
-      const sanitizedCorrectAnswer = _.toLower(_.trim(correctAnswer && correctAnswer.answer));
-      return sanitizedSuppliedAnswer === sanitizedCorrectAnswer;
+      switch (type) {
+        case QuestionType.ALTERNATIVES: {
+          const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
+          const sanitizedCorrectAnswer = _.toLower(_.trim(answerId));
+          return sanitizedSuppliedAnswer === sanitizedCorrectAnswer;
+        }
+        default: {
+          const correctAnswer = answers.find(answer => answer.id == answerId);
+          const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
+          const sanitizedCorrectAnswer = _.toLower(_.trim(correctAnswer && correctAnswer.answer));
+          return sanitizedSuppliedAnswer === sanitizedCorrectAnswer;
+        }
+      }
     }
   }
 
@@ -152,9 +163,16 @@ class Questions extends Component<ComponentProps, ComponentState> {
     }
   }
 
-  private handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    const { value } = event.currentTarget;
-    const newState = { formQuestionAnswer: value, formError: false }
+  private onInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const { value: answer } = event.currentTarget;
+    const newState = { formQuestionAnswer: answer, formWarning: false, formError: false }
+    this.setState(newState);
+  }
+
+  private onRadioChange = (event: React.FormEvent<HTMLInputElement>, data: CheckboxProps) => {
+    const { value } = data;
+    const answer = "" + value;
+    const newState = { formQuestionAnswer: answer, formWarning: false, formError: false }
     this.setState(newState);
   }
 

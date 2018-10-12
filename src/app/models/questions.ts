@@ -1,5 +1,6 @@
 export enum QuestionType {
     NORMAL = 'NORMAL',
+    ALTERNATIVES = 'ALTERNATIVES',
     MULTIPLE_CHOICE = 'MULTIPLE_CHOICE'
 }
 

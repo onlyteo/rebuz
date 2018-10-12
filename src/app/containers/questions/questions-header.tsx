@@ -13,14 +13,14 @@ class QuestionsHeader extends Component<ComponentProps> {
 
     if (details) {
       return (
-        <div>
+        <div className="question-header">
           <h3>{details}</h3>
           <h4>{question}</h4>
         </div>
       );
     } else {
       return (
-        <div>
+        <div className="question-header">
           <h4>{question}</h4>
         </div>
       );

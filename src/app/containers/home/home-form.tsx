@@ -19,6 +19,8 @@ class HomeForm extends Component<ComponentProps> {
       <Form onSubmit={onSubmit} error={formError}>
         <Form.Group>
           <Form.Input placeholder='Enter rebuz id...' value={formEventId} onChange={onChange} error={formError} />
+        </Form.Group>
+        <Form.Group>
           <Form.Button primary>
             Find rebuz <Icon name="arrow right" />
           </Form.Button>

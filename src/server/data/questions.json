@@ -14,16 +14,27 @@
     },
     {
         "id": "S0Cl65",
-        "type": "NORMAL",
-        "details": "Gå til yolo",
-        "question": "Hvor langt?",
+        "type": "ALTERNATIVES",
+        "question": "Hva heter?",
         "answers": [
             {
                 "id": "1",
-                "answer": "2"
+                "answer": "A"
+            },
+            {
+                "id": "2",
+                "answer": "B"
+            },
+            {
+                "id": "3",
+                "answer": "C"
+            },
+            {
+                "id": "4",
+                "answer": "D"
             }
         ],
-        "answerId": "1"
+        "answerId": "3"
     },
     {
         "id": "9vr7DR",
