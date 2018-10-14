@@ -122,16 +122,19 @@ class Questions extends Component<ComponentProps, ComponentState> {
       const { type, answerId, answers } = question;
 
       switch (type) {
+        case QuestionType.NORMAL: {
+          const correctAnswer = answers.find(answer => answer.id == answerId);
+          const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
+          const sanitizedCorrectAnswer = _.toLower(_.trim(correctAnswer && correctAnswer.answer));
+          return sanitizedSuppliedAnswer === sanitizedCorrectAnswer;
+        }
         case QuestionType.ALTERNATIVES: {
           const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
           const sanitizedCorrectAnswer = _.toLower(_.trim(answerId));
           return sanitizedSuppliedAnswer === sanitizedCorrectAnswer;
         }
         default: {
-          const correctAnswer = answers.find(answer => answer.id == answerId);
-          const sanitizedSuppliedAnswer = _.toLower(_.trim(formQuestionAnswer));
-          const sanitizedCorrectAnswer = _.toLower(_.trim(correctAnswer && correctAnswer.answer));
-          return sanitizedSuppliedAnswer === sanitizedCorrectAnswer;
+          return false;
         }
       }
     }

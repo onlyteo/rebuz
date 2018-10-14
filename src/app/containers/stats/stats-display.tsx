@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
-import { Table } from 'semantic-ui-react'
+import { Tab } from 'semantic-ui-react'
 
-import { RootState, EventState, StatsState, TeamState } from "../../models";
-import { findStats, getEvent, getTeam } from '../../state/actions';
-import { defaultLink, LoadingIndicator, NotificationMessage, LinkProps } from '../../components';
+import { RootState, EventState, QuestionState, StatsState, TeamState } from "../../models";
+import { findStats, getEvent, getTeam, getQuestion } from '../../state/actions';
+import { StatsResultsContainer } from './stats-results';
+import { StatsSummaryContainer } from './stats-summary';
 
 import './stats.css';
 
 interface ComponentDispatchProps {
   getEvent: (id: string) => Promise<any>;
   getTeam: (id: string) => Promise<any>;
+  getQuestion: (id: string) => Promise<any>;
   findStats: (eventId: string) => Promise<any>;
 }
 
@@ -19,6 +21,7 @@ interface ComponentStateProps {
   match?: any;
   eventState: EventState;
   teamState: TeamState;
+  questionState: QuestionState;
   statsState: StatsState;
 }
 
@@ -36,93 +39,86 @@ class StatsDisplay extends Component<ComponentProps> {
 
   componentDidUpdate() {
     const { eventId } = this.props.match.params;
-    const { eventState, teamState } = this.props;
+    const { eventState, teamState, /*questionState*/ } = this.props;
     const { loading: eventsLoading, eventMap } = eventState;
-    const { loading: teamsLoading, teamMap } = teamState;
+    const { loading: teamsLoading, /*teams,*/ teamMap } = teamState;
+    //const { loading: questionLoading, questionMap } = questionState;
 
     if (eventId && !eventsLoading && eventMap && eventMap[eventId]) {
       const event = eventMap[eventId];
       if (event) {
-        event.teams.forEach(team => {
-          if (!teamsLoading && !teamMap[team]) {
-            this.props.getTeam(team);
+        event.teams.forEach(teamId => {
+          if (!teamsLoading && !teamMap[teamId]) {
+            this.props.getTeam(teamId);
           }
         });
       }
     }
+
+    // if (!teamsLoading && teams && teams.length) {
+    //   teams.forEach(team => {
+    //     const { questions } = team;
+    //     questions.forEach(questionId => {
+    //       if (!questionLoading && !questionMap[questionId]) {
+    //         this.props.getQuestion(questionId);
+    //       }
+    //     });
+    //   });
+    // }
   }
 
   public render(): ReactNode {
     const { eventId } = this.props.match.params;
-    const { eventState, statsState, teamState } = this.props;
-    const { loading: eventsLoading, events, eventMap } = eventState;
-    const { loading: teamLoading, teams, teamMap } = teamState;
-    const { loading: statsLoading, stats } = statsState;
-
-    const backLink: LinkProps = { ...defaultLink, path: '/stats', text: 'Back to stats search' };
-
-    if (!eventId) {
-      return <NotificationMessage error link={backLink} message='No event id selected' />
-    } else if (eventsLoading || statsLoading || teamLoading) {
-      return <LoadingIndicator />
-    } else if (events && events.length && stats && stats.length && teams && teams.length) {
-      const event = eventMap[eventId];
-      const { welcomeMessage } = event;
-      const statList = stats.map((stat) => {
-        const { team: teamId, question: questionId, modified } = stat;
-        const team = teamMap[teamId];
-        const { name: teamName, questions } = team;
-        const questionNumber = questions.indexOf(questionId) + 1;
-        const modifiedTime = new Date(0);
-        modifiedTime.setUTCSeconds(modified);
-        const modifiedTimeString = modifiedTime.toLocaleString('nb-NO');
-        return {
-          teamName: teamName,
-          questionNumber: questionNumber,
-          modifiedTime: modifiedTimeString
-        };
-      });
-      return (
-        <div>
-          <h3>{welcomeMessage}</h3>
-          <Table celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Team</Table.HeaderCell>
-                <Table.HeaderCell>Question</Table.HeaderCell>
-                <Table.HeaderCell>Last modified</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {statList.sort().map((stat, index) => {
-                const { teamName, questionNumber, modifiedTime } = stat;
-                return (
-                  <Table.Row key={index}>
-                    <Table.Cell>{teamName}</Table.Cell>
-                    <Table.Cell>{questionNumber}</Table.Cell>
-                    <Table.Cell>{modifiedTime}</Table.Cell>
-                  </Table.Row>
-                )
-              })}
-            </Table.Body>
-          </Table>
-        </div>
-      );
-    } else {
-      return <NotificationMessage error link={backLink} message={`No stats found for event id "${eventId}"`} />
-    }
+    const { eventState, teamState, statsState, questionState } = this.props;
+    const { eventMap } = eventState;
+    const event = eventMap[eventId];
+    const { welcomeMessage: title } = event || { welcomeMessage: '' };
+    const panes = [
+      {
+        menuItem: 'Results',
+        render: () => (
+          <Tab.Pane>
+            <StatsResultsContainer
+              eventId={eventId}
+              eventState={eventState}
+              teamState={teamState}
+              statsState={statsState} />
+          </Tab.Pane>
+        )
+      },
+      {
+        menuItem: 'Summary',
+        render: () => (
+          <Tab.Pane>
+            <StatsSummaryContainer
+              eventId={eventId}
+              eventState={eventState}
+              teamState={teamState}
+              statsState={statsState}
+              questionState={questionState} />
+          </Tab.Pane>)
+      }
+    ]
+    return (
+      <div>
+        <h3>{title}</h3>
+        <Tab panes={panes} />
+      </div>
+    );
   }
 }
 
 const mapStateToProps = (state: RootState): ComponentStateProps => ({
   eventState: state.events,
   teamState: state.teams,
+  questionState: state.question,
   statsState: state.stats
 });
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
   getEvent: (id: string) => dispatch(getEvent(id)),
   getTeam: (id: string) => dispatch(getTeam(id)),
+  getQuestion: (id: string) => dispatch(getQuestion(id)),
   findStats: (eventId: string) => dispatch(findStats(eventId)),
 });
 

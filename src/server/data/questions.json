@@ -2,45 +2,43 @@
     {
         "id": "5oCnKZ",
         "type": "NORMAL",
-        "details": "Gå til Meny",
-        "question": "Hvor mange?",
+        "question": "Hvor mange oppmerkede parkeringsplasser er det til venstre for inngangen på Meny?",
         "answers": [
             {
                 "id": "1",
-                "answer": "1"
+                "answer": "8"
             }
         ],
         "answerId": "1"
     },
     {
         "id": "S0Cl65",
-        "type": "ALTERNATIVES",
-        "question": "Hva heter?",
+        "type": "NORMAL",
+        "question": "Hva er fornavnet til kronprinsesse Mette Marits eldte sønn?",
         "answers": [
             {
                 "id": "1",
-                "answer": "A"
-            },
-            {
-                "id": "2",
-                "answer": "B"
-            },
-            {
-                "id": "3",
-                "answer": "C"
-            },
-            {
-                "id": "4",
-                "answer": "D"
+                "answer": "Marius"
             }
         ],
-        "answerId": "3"
+        "answerId": "1"
+    },
+    {
+        "id": "Y5Va6F",
+        "type": "NORMAL",
+        "question": "Hvor mye koster det for en gjestelunsj i kantina?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "125"
+            }
+        ],
+        "answerId": "1"
     },
     {
         "id": "9vr7DR",
         "type": "NORMAL",
-        "details": "Gå til Meny",
-        "question": "?",
+        "question": "Hvor mange gule blomsterkasser er det på lekeplassen ved Egon?",
         "answers": [
             {
                 "id": "1",
@@ -50,14 +48,210 @@
         "answerId": "1"
     },
     {
+        "id": "65GtBM",
+        "type": "NORMAL",
+        "question": "I tillegg til Røyken, hvilken kommune er Asker slått sammen med?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "Hurum"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "N7hf3t",
+        "type": "NORMAL",
+        "question": "Hvor mange innbyggere er det i Asker, rundet til nærmeste 1000?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "59000"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
         "id": "msNR2Y",
         "type": "NORMAL",
-        "details": "Gå til Meny",
-        "question": "?",
+        "question": "Hvor mange plakatmontre er det på bakken utenfor kinoen?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "10"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "w94IUe",
+        "type": "NORMAL",
+        "question": "Hva er fornavnet til den som har jobbet lengst i vår avdeling?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "Odin"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "RfM87h",
+        "type": "NORMAL",
+        "question": "Hva er etternavnet til ordføreren i Asker?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "Conradi"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "T58ZHu",
+        "type": "NORMAL",
+        "question": "Hvilken butikk ligger til høyre for den store hvite benken i sentrum?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "Female"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "7bFG4i",
+        "type": "NORMAL",
+        "question": "Hvilken flyprodusent lager modellen 737?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "Boeing"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "Fk91hI",
+        "type": "NORMAL",
+        "question": "Hvor mange butikker er det totalt i Trekanten kjøpesenter?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "75"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "y9bD36",
+        "type": "NORMAL",
+        "question": "Hvor mange pissoarer er det på Lancelot?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "3"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "mE56mr",
+        "type": "NORMAL",
+        "details": "Gå til togstasjonen",
+        "question": "Hva står det på det gule skiltet som henger ved sektor H på perrong 1?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "220m"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "xG13DQ",
+        "type": "NORMAL",
+        "details": "Ved Egon står det en statue av kong Olav V",
+        "question": "Hvor mange knapper er det i jakken hans?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "8"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "h26SqT",
+        "type": "NORMAL",
+        "question": "Hvilken farge er det på gardinene til bibliotektet?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "Rød"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "zEe75x",
+        "type": "NORMAL",
+        "details": "Det står en statue utenfor kulturhuset",
+        "question": "Hva er fornavnet til kunstneren?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "Irene"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "lT2cG2",
+        "type": "NORMAL",
+        "details": "Gå til togstasjonen",
+        "question": "Hvor mange personer står oppført på minnestenen utenfor Narvesen?",
         "answers": [
             {
                 "id": "1",
                 "answer": "4"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "kA43iB",
+        "type": "NORMAL",
+        "question": "Hvor mange trappetrinn er det på pyramiden i Asker sentrum?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "8"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "8i675T",
+        "type": "NORMAL",
+        "details": "Gå til togstasjonen",
+        "question": "Hvor mange røde postkasser er det utenfor Narvesen?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "2"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "rB9W9E",
+        "type": "NORMAL",
+        "question": "Hvilken bokstav er inngangen til politistasjonen merket med?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "M"
             }
         ],
         "answerId": "1"

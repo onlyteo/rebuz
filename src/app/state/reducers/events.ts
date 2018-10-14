@@ -26,12 +26,11 @@ export function get(state: EventState = initialEventState, action: GetEventActio
         case GetEventActionType.SUCCESS: {
             const { payload } = action;
             let { events, eventMap } = state;
-            console.log(payload);
+
             if (payload) {
-                let index = events.indexOf(payload);
-                if (~index) {
-                    events[index] = payload;
-                } else {
+                const { id: payloadId } = payload;
+                const event = events.find(event => event.id === payloadId);
+                if (!event) {
                     events = events.concat(payload);
                 }
                 eventMap[payload.id] = payload;

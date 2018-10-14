@@ -13,13 +13,12 @@ export function get(state: TeamState = initialTeamState, action: GetTeamAction):
             let { teams, teamMap } = state;
 
             if (payload) {
-                let index = teams.indexOf(payload);
-                if (~index) {
-                    teams[index] = payload;
-                } else {
+                const { id: payloadId } = payload;
+                const team = teams.find(team => team.id === payloadId);
+                if (!team) {
                     teams = teams.concat(payload);
                 }
-                teamMap[payload.id] = payload;
+                teamMap[payloadId] = payload;
             }
 
             return { ...initialTeamState, teams: teams, teamMap: teamMap };

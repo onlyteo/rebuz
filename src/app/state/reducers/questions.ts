@@ -11,9 +11,12 @@ export function get(state: QuestionState = initialQuestionState, action: GetQues
         case GetQuestionActionType.SUCCESS: {
             const { payload } = action;
             let { questionMap } = state;
+
             if (payload) {
-                questionMap[payload.id] = payload;
+                const { id: payloadId } = payload;
+                questionMap[payloadId] = payload;
             }
+
             return { ...initialQuestionState, question: payload, questionMap: questionMap };
         }
 
