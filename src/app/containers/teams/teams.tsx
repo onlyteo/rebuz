@@ -60,7 +60,7 @@ class Teams extends Component<ComponentProps, ComponentState> {
       return (
         <div>
           <h3>{welcomeMessage}</h3>
-          <h4>Your are team <i>{teamName}</i></h4>
+          <h4>You are team <i>{teamName}</i></h4>
           <p>
             <Button primary onClick={() => this.handleClick(team)}>
               Start rebuz! <Icon name="arrow right" />

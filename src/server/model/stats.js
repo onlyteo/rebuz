@@ -7,8 +7,8 @@ let StatsSchema = new Schema({
     event: { type: String, required: true },
     team: { type: String, required: true },
     question: { type: String, required: true },
-    created: { type: Number, default: utils.epochSeconds() },
-    modified: { type: Number, default: utils.epochSeconds() }
+    created: { type: Number },
+    modified: { type: Number }
 });
 
 module.exports = mongoose.model('Stats', StatsSchema);

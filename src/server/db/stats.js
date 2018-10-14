@@ -13,7 +13,8 @@ exports.find = (query, handler) => {
 };
 
 exports.save = (data, handler) => {
-    let stats = new Stats(data);
+    const dataWithTimestamps = { ...data, created: utils.epochSeconds(), modified: utils.epochSeconds() };
+    let stats = new Stats(dataWithTimestamps);
     stats.save(handler);
 }
 
