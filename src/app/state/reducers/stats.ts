@@ -1,5 +1,5 @@
 import { StatsState, initialStatsState } from "../../models";
-import { FindStatsAction, FindStatsActionType, StatsAction, SaveStatsAction, SaveStatsActionType } from "../actions";
+import { RemoveStatsAction, RemoveStatsActionType, FindStatsAction, FindStatsActionType, StatsAction, SaveStatsAction, SaveStatsActionType } from "../actions";
 
 export function reducer(state: StatsState = initialStatsState, action: StatsAction): StatsState {
     switch (action.type) {
@@ -11,6 +11,10 @@ export function reducer(state: StatsState = initialStatsState, action: StatsActi
         case SaveStatsActionType.SUCCESS:
         case SaveStatsActionType.ERROR:
             return save(state, action);
+        case RemoveStatsActionType.LOADING:
+        case RemoveStatsActionType.SUCCESS:
+        case RemoveStatsActionType.ERROR:
+            return remove(state, action);
         default:
             return state;
     }
@@ -51,6 +55,28 @@ export function save(state: StatsState = initialStatsState, action: SaveStatsAct
         }
 
         case SaveStatsActionType.ERROR: {
+            const { error } = action;
+            return { ...initialStatsState, error: error };
+        }
+
+        default: {
+            return state;
+        }
+    }
+}
+
+export function remove(state: StatsState = initialStatsState, action: RemoveStatsAction): StatsState {
+    switch (action.type) {
+        case RemoveStatsActionType.LOADING: {
+            const { loading } = action;
+            return { ...state, loading: loading };
+        }
+
+        case RemoveStatsActionType.SUCCESS: {
+            return state;
+        }
+
+        case RemoveStatsActionType.ERROR: {
             const { error } = action;
             return { ...initialStatsState, error: error };
         }

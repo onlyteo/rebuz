@@ -20,3 +20,7 @@ exports.save = (data, handler) => {
 exports.update = (data, handler) => {
     Stats.updateOne(data, { modified: utils.epochSeconds() }, handler);
 }
+
+exports.delete = (query, handler) => {
+    Stats.deleteMany(query, handler);
+}

@@ -37,4 +37,19 @@ router.post('/', (req, res) => {
     });
 })
 
+router.delete('/', (req, res) => {
+    const { event, team } = req.query;
+    if (!event && !team) {
+        res.status(400).send();
+    }
+
+    service.delete(event, team, (err) => {
+        if (err) {
+            res.status(500).send();
+        } else {
+            res.status(200).send();
+        }
+    });
+})
+
 module.exports = router;

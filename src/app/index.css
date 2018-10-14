@@ -20,6 +20,10 @@ body {
   padding-bottom: 3rem;
 }
 
+.ui.form .fields {
+  margin-bottom: 1rem;
+}
+
 .header-link {
   color: #000;
 }

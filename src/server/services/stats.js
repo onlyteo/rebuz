@@ -53,3 +53,16 @@ exports.save = (stats, handler) => {
         }
     });
 }
+
+exports.delete = (event, team, handler) => {
+    let query = {};
+    if (event) {
+        query = { event: event }
+    }
+    if (team) {
+        query = { ...query, team: team }
+    }
+    repository.delete(query, (err) => {
+        handler(err);
+    });
+};

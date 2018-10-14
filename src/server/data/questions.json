@@ -110,11 +110,11 @@
     {
         "id": "T58ZHu",
         "type": "NORMAL",
-        "question": "Hvilken butikk ligger til høyre for den store hvite benken i sentrum?",
+        "question": "Ved Smuget står det en stor hvit benk, hvilken butikk ligger til venstre for benken?",
         "answers": [
             {
                 "id": "1",
-                "answer": "Female"
+                "answer": "Change"
             }
         ],
         "answerId": "1"
@@ -146,11 +146,11 @@
     {
         "id": "y9bD36",
         "type": "NORMAL",
-        "question": "Hvor mange pissoarer er det på Lancelot?",
+        "question": "Hvilket sonenummer er det på parkeringsautomaten utenfor Lancelot?",
         "answers": [
             {
                 "id": "1",
-                "answer": "3"
+                "answer": "1880"
             }
         ],
         "answerId": "1"
@@ -234,8 +234,7 @@
     {
         "id": "8i675T",
         "type": "NORMAL",
-        "details": "Gå til togstasjonen",
-        "question": "Hvor mange røde postkasser er det utenfor Narvesen?",
+        "question": "Hvor mange røde postkasser er det utenfor Narvesen på togstasjonen?",
         "answers": [
             {
                 "id": "1",
@@ -252,6 +251,18 @@
             {
                 "id": "1",
                 "answer": "M"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
+        "id": "1bTK1Y",
+        "type": "NORMAL",
+        "question": "På bygget ved siden av Ask, hvor mange trepaneler består veggen av?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "144"
             }
         ],
         "answerId": "1"

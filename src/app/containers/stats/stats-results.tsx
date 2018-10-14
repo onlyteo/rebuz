@@ -1,18 +1,30 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
-import { Table } from 'semantic-ui-react'
+import { connect } from 'react-redux';
+import { Form, FormProps, Table, Icon } from 'semantic-ui-react'
 
-import { EventState, StatsState, TeamState } from "../../models";
+import { findStats, removeStats } from '../../state/actions';
+import { RootState, EventState, StatsState, TeamState } from "../../models";
 import { defaultLink, LoadingIndicator, NotificationMessage, LinkProps } from '../../components';
 
 import './stats.css';
 
-interface ComponentProps {
+interface ComponentDispatchProps {
+  findStats: (eventId: string) => Promise<any>;
+  removeStats: (eventId: string) => Promise<any>;
+}
+
+interface ComponentStateProps {
+}
+
+interface ComponentLocalProps {
   eventId?: any;
   eventState: EventState;
   teamState: TeamState;
   statsState: StatsState;
 }
+
+type ComponentProps = ComponentDispatchProps & ComponentStateProps & ComponentLocalProps;
 
 class StatsResults extends Component<ComponentProps> {
 
@@ -45,6 +57,13 @@ class StatsResults extends Component<ComponentProps> {
       });
       return (
         <div>
+          <Form onSubmit={this.onFormSubmit}>
+            <Form.Group>
+              <Form.Button primary>
+                Delete stats <Icon name="delete" />
+              </Form.Button>
+            </Form.Group>
+          </Form>
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -74,6 +93,12 @@ class StatsResults extends Component<ComponentProps> {
       return <NotificationMessage error link={backLink} message={`No stats found for event id "${eventId}"`} />
     }
   }
+
+  private onFormSubmit = (event: React.FormEvent<HTMLFormElement>, data: FormProps) => {
+    const { eventId } = this.props;
+    this.props.removeStats(eventId);
+    this.props.findStats(eventId);
+  }
 }
 
 const timestampToString = (timestamp: number): string => {
@@ -82,4 +107,14 @@ const timestampToString = (timestamp: number): string => {
   return dateTime.toLocaleString('nb-NO');
 }
 
-export { StatsResults as StatsResultsContainer };
+const mapStateToProps = (state: RootState): ComponentStateProps => ({
+});
+
+const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
+  findStats: (eventId: string) => dispatch(findStats(eventId)),
+  removeStats: (eventId: string) => dispatch(removeStats(eventId))
+});
+
+const StatsResultsContainer = connect(mapStateToProps, mapDispatchToProps)(StatsResults);
+
+export { StatsResultsContainer };
