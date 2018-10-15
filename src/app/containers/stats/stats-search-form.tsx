@@ -10,7 +10,7 @@ interface ComponentProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>, data: FormProps) => void;
 }
 
-class StatsForm extends Component<ComponentProps> {
+class StatsSearchForm extends Component<ComponentProps> {
 
   public render(): ReactNode {
     const { formEventId, formError, formErrorMessage, onChange, onSubmit } = this.props;
@@ -31,4 +31,4 @@ class StatsForm extends Component<ComponentProps> {
   }
 }
 
-export { StatsForm };
+export { StatsSearchForm };

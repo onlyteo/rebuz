@@ -3,7 +3,7 @@ import { Component, ReactNode } from 'react';
 import { Route, Switch } from 'react-router-dom'
 
 import { StatsSearchContainer } from './stats-seach';
-import { StatsDisplayContainer } from './stats-display';
+import { StatsTabsContainer } from './stats-tabs';
 
 import './stats.css';
 
@@ -13,7 +13,7 @@ class Stats extends Component {
     return (
       <Switch>
         <Route exact path="/stats" component={StatsSearchContainer} />
-        <Route exact path="/stats/:eventId?" component={StatsDisplayContainer} />
+        <Route exact path="/stats/:eventId?" component={StatsTabsContainer} />
       </Switch>
     );
   }

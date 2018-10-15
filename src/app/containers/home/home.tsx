@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ChangeEventHandler, Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
+import * as _ from 'lodash';
 
 import { RootState } from "../../models";
 import { HomeForm } from './home-form'
@@ -51,7 +52,8 @@ class Home extends Component<ComponentProps, ComponentState> {
 
   private handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const { value } = event.currentTarget;
-    this.setFormUpdatedState(value);
+    const formEventId = value ? _.trim(value) : undefined;
+    this.setFormUpdatedState(formEventId);
   }
 
   private handleSubmit = () => {

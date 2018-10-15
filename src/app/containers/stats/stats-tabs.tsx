@@ -27,7 +27,7 @@ interface ComponentStateProps {
 
 type ComponentProps = ComponentDispatchProps & ComponentStateProps;
 
-class StatsDisplay extends Component<ComponentProps> {
+class StatsTabs extends Component<ComponentProps> {
 
   componentDidMount() {
     const { eventId } = this.props.match.params;
@@ -122,6 +122,6 @@ const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
   findStats: (eventId: string) => dispatch(findStats(eventId)),
 });
 
-const StatsDisplayContainer = connect(mapStateToProps, mapDispatchToProps)(StatsDisplay);
+const StatsTabsContainer = connect(mapStateToProps, mapDispatchToProps)(StatsTabs);
 
-export { StatsDisplayContainer };
+export { StatsTabsContainer };

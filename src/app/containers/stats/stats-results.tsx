@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
-import { Form, FormProps, Table, Icon } from 'semantic-ui-react'
+import { Button, ButtonProps, Icon, ModalProps, Table } from 'semantic-ui-react'
 
 import { findStats, removeStats } from '../../state/actions';
 import { RootState, EventState, StatsState, TeamState } from "../../models";
-import { defaultLink, LoadingIndicator, NotificationMessage, LinkProps } from '../../components';
+import { defaultLink, ConfirmModal, LoadingIndicator, NotificationMessage, LinkProps } from '../../components';
 
 import './stats.css';
+
+interface ComponentState {
+  openModal: boolean;
+}
 
 interface ComponentDispatchProps {
   findStats: (eventId: string) => Promise<any>;
@@ -24,9 +28,18 @@ interface ComponentLocalProps {
   statsState: StatsState;
 }
 
+const initialState: ComponentState = {
+  openModal: false
+}
+
 type ComponentProps = ComponentDispatchProps & ComponentStateProps & ComponentLocalProps;
 
-class StatsResults extends Component<ComponentProps> {
+class StatsResults extends Component<ComponentProps, ComponentState> {
+
+  constructor(props: ComponentProps) {
+    super(props);
+    this.state = initialState;
+  }
 
   public render(): ReactNode {
     const { eventId, eventState, statsState, teamState } = this.props;
@@ -41,6 +54,7 @@ class StatsResults extends Component<ComponentProps> {
     } else if (eventsLoading || statsLoading || teamLoading) {
       return <LoadingIndicator />
     } else if (events && events.length && stats && stats.length && teams && teams.length) {
+      const { openModal } = this.state;
       const statList = stats.map((stat) => {
         const { team: teamId, question: questionId, created, modified } = stat;
         const team = teamMap[teamId];
@@ -57,13 +71,15 @@ class StatsResults extends Component<ComponentProps> {
       });
       return (
         <div>
-          <Form onSubmit={this.onFormSubmit}>
-            <Form.Group>
-              <Form.Button primary>
-                Delete stats <Icon name="delete" />
-              </Form.Button>
-            </Form.Group>
-          </Form>
+          <ConfirmModal
+            title='Delete stats'
+            subtitle='This action can not be reversed'
+            open={openModal}
+            onClose={this.onModalClose}
+            onClick={this.onModalCloseButtonClick} />
+          <Button primary onClick={this.onModalOpenButtonClick}>
+            Delete stats <Icon name="delete" />
+          </Button>
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -90,14 +106,29 @@ class StatsResults extends Component<ComponentProps> {
         </div>
       );
     } else {
-      return <NotificationMessage error link={backLink} message={`No stats found for event id "${eventId}"`} />
+      return <NotificationMessage warning link={backLink} message={`No stats found for event id "${eventId}"`} />
     }
   }
 
-  private onFormSubmit = (event: React.FormEvent<HTMLFormElement>, data: FormProps) => {
+  private onModalOpenButtonClick = (event: React.MouseEvent<HTMLButtonElement>, data: ButtonProps) => {
+    const newState = { openModal: true }
+    this.setState(newState);
+  }
+
+  private onModalCloseButtonClick = (event: React.MouseEvent<HTMLButtonElement>, data: ButtonProps) => {
     const { eventId } = this.props;
-    this.props.removeStats(eventId);
-    this.props.findStats(eventId);
+    const { positive } = data;
+    if (positive) {
+      this.props.removeStats(eventId);
+      this.props.findStats(eventId);
+    }
+    const newState = { openModal: false }
+    this.setState(newState);
+  }
+
+  private onModalClose = (event: React.MouseEvent<HTMLElement>, data: ModalProps) => {
+    const newState = { openModal: false }
+    this.setState(newState);
   }
 }
 

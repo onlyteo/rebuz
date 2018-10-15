@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ChangeEventHandler, Component, ReactNode } from 'react';
+import * as _ from 'lodash';
 
-import { StatsForm } from './stats-form'
+import { StatsSearchForm } from './stats-search-form'
 
 import './stats.css';
 import { Redirect } from 'react-router';
@@ -36,14 +37,20 @@ class StatsSearch extends Component<ComponentProps, ComponentState> {
       return <Redirect to={path} />
     } else {
       return (
-        <StatsForm formEventId={formEventId} formError={formError} formErrorMessage={formErrorMessage} onChange={this.handleChange} onSubmit={this.handleSubmit} />
+        <StatsSearchForm
+          formEventId={formEventId}
+          formError={formError}
+          formErrorMessage={formErrorMessage}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit} />
       );
     }
   }
 
   private handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const { value } = event.currentTarget;
-    this.setFormUpdatedState(value);
+    const formEventId = value ? _.trim(value) : undefined;
+    this.setFormUpdatedState(formEventId);
   }
 
   private handleSubmit = () => {
