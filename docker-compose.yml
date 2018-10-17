@@ -8,8 +8,10 @@ services:
     hostname: node
     domainname: rebuz.no
     environment:
+      - NODE_ENV=production
       - NODE_PUBLIC_HOST=rebuz.no
       - MONGO_DB_HOST=rebuz_mongo
+    command: [ "npm", "run", "start" ]
     ports:
       - 80:3000
     networks:
@@ -20,8 +22,6 @@ services:
     container_name: rebuz_mongo
     hostname: mongo
     domainname: rebuz.no
-    ports:
-      - 27017:27017
     networks:
       rebuz:
 

@@ -12,6 +12,7 @@ const publicDir = 'public';
 const outputPath = path.resolve(__dirname, outputDir);
 const indexFile = path.resolve(__dirname, publicDir, 'index.html');
 const publicHost = process.env.NODE_PUBLIC_HOST || 'localhost:3000';
+const mode = process.env.NODE_ENV || 'development';
 
 module.exports = {
     entry: {
@@ -78,9 +79,11 @@ module.exports = {
     },
     performance: {
         maxEntrypointSize: 1000000,
-        maxAssetSize: 1000000
+        maxAssetSize: 1000000,
+        hints: false
     },
-    devtool: 'source-map',
+    mode: mode,
+    devtool: (mode === 'development') ? 'source-map' : false,
     devServer: {
         port: 3000,
         historyApiFallback: true,
