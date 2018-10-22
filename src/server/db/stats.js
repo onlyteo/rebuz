@@ -13,13 +13,15 @@ exports.find = (query, handler) => {
 };
 
 exports.save = (data, handler) => {
-    const dataWithTimestamps = { ...data, created: utils.epochSeconds(), modified: utils.epochSeconds() };
+    const timestamp = utils.epochSeconds();
+    const dataWithTimestamps = { ...data, created: timestamp, modified: timestamp };
     let stats = new Stats(dataWithTimestamps);
     stats.save(handler);
 }
 
 exports.update = (data, handler) => {
-    Stats.updateOne(data, { modified: utils.epochSeconds() }, handler);
+    const timestamp = utils.epochSeconds();
+    Stats.updateOne(data, { modified: timestamp }, handler);
 }
 
 exports.delete = (query, handler) => {

@@ -13,7 +13,7 @@ exports.find = (event, team, handler) => {
         if (err) {
             handler(err, undefined);
         } else if (result) {
-            const stats = result.map((item) => {
+            const stats = result.sort().map((item) => {
                 return {
                     event: item.event,
                     team: item.team,

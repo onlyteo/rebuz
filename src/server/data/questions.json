@@ -2,7 +2,8 @@
     {
         "id": "5oCnKZ",
         "type": "NORMAL",
-        "question": "Hvor mange oppmerkede parkeringsplasser er det til venstre for inngangen på Meny?",
+        "details": "Gå til Meny",
+        "question": "Hvor mange oppmerkede parkeringsplasser er det til høyre for inngangen?",
         "answers": [
             {
                 "id": "1",
@@ -26,11 +27,11 @@
     {
         "id": "Y5Va6F",
         "type": "NORMAL",
-        "question": "Hvor mye koster det for en gjestelunsj i kantina?",
+        "question": "Hva heter lokalavisa i Asker og Bærum?",
         "answers": [
             {
                 "id": "1",
-                "answer": "125"
+                "answer": "Budstikka"
             }
         ],
         "answerId": "1"
@@ -38,11 +39,12 @@
     {
         "id": "9vr7DR",
         "type": "NORMAL",
-        "question": "Hvor mange gule blomsterkasser er det på lekeplassen ved Egon?",
+        "details": "Gå til lekeplassen ved Egon",
+        "question": "Hvor mange gule benker er det på lekeplassen?",
         "answers": [
             {
                 "id": "1",
-                "answer": "3"
+                "answer": "2"
             }
         ],
         "answerId": "1"
@@ -62,11 +64,11 @@
     {
         "id": "N7hf3t",
         "type": "NORMAL",
-        "question": "Hvor mange innbyggere er det i Asker, rundet til nærmeste 1000?",
+        "question": "I følge Statistisk sentralbyrå, hvor mange innbyggere er det i Asker kommune?",
         "answers": [
             {
                 "id": "1",
-                "answer": "59000"
+                "answer": "61289"
             }
         ],
         "answerId": "1"
@@ -74,7 +76,8 @@
     {
         "id": "msNR2Y",
         "type": "NORMAL",
-        "question": "Hvor mange plakatmontre er det på bakken utenfor kinoen?",
+        "details": "Gå til kinoen",
+        "question": "Hvor mange plakatmontre er festet til murkanten utenfor?",
         "answers": [
             {
                 "id": "1",
@@ -86,11 +89,11 @@
     {
         "id": "w94IUe",
         "type": "NORMAL",
-        "question": "Hva er fornavnet til den som har jobbet lengst i vår avdeling?",
+        "question": "Hvem av de faste ansatte i vår avdeling har jobbet lengst i Indra (fornavn)?",
         "answers": [
             {
                 "id": "1",
-                "answer": "Odin"
+                "answer": "Dag"
             }
         ],
         "answerId": "1"
@@ -110,7 +113,8 @@
     {
         "id": "T58ZHu",
         "type": "NORMAL",
-        "question": "Ved Smuget står det en stor hvit benk, hvilken butikk ligger til venstre for benken?",
+        "details": "Gå til Smuget",
+        "question": "Hvilken butikk ligger til høyre for den store hvite benken?",
         "answers": [
             {
                 "id": "1",
@@ -134,7 +138,7 @@
     {
         "id": "Fk91hI",
         "type": "NORMAL",
-        "question": "Hvor mange butikker er det totalt i Trekanten kjøpesenter?",
+        "question": "Ifølge nettsiden til Trekanten kjøpesenter, hvor mange butikker er det totalt?",
         "answers": [
             {
                 "id": "1",
@@ -146,7 +150,8 @@
     {
         "id": "y9bD36",
         "type": "NORMAL",
-        "question": "Hvilket sonenummer er det på parkeringsautomaten utenfor Lancelot?",
+        "details": "Gå til Lancelot",
+        "question": "Hvilket sonenummer er det på parkeringsautomaten rett utenfor?",
         "answers": [
             {
                 "id": "1",
@@ -171,8 +176,8 @@
     {
         "id": "xG13DQ",
         "type": "NORMAL",
-        "details": "Ved Egon står det en statue av kong Olav V",
-        "question": "Hvor mange knapper er det i jakken hans?",
+        "details": "Gå til Egon",
+        "question": "Hvor mange knapper har jakken til statuen av kong Olav V?",
         "answers": [
             {
                 "id": "1",
@@ -184,7 +189,8 @@
     {
         "id": "h26SqT",
         "type": "NORMAL",
-        "question": "Hvilken farge er det på gardinene til bibliotektet?",
+        "details": "Gå til bibliotektet",
+        "question": "Hvilken farge er det på gardinene?",
         "answers": [
             {
                 "id": "1",
@@ -196,8 +202,8 @@
     {
         "id": "zEe75x",
         "type": "NORMAL",
-        "details": "Det står en statue utenfor kulturhuset",
-        "question": "Hva er fornavnet til kunstneren?",
+        "details": "Gå til Asker Kulturhus",
+        "question": "Hva er fornavnet til kunstneren av kaninstatuen utenfor?",
         "answers": [
             {
                 "id": "1",
@@ -209,8 +215,8 @@
     {
         "id": "lT2cG2",
         "type": "NORMAL",
-        "details": "Gå til togstasjonen",
-        "question": "Hvor mange personer står oppført på minnestenen utenfor Narvesen?",
+        "details": "Gå til Narvesen på togstasjonen",
+        "question": "Hvor mange personer står oppført på minnestenen utenfor?",
         "answers": [
             {
                 "id": "1",
@@ -222,7 +228,8 @@
     {
         "id": "kA43iB",
         "type": "NORMAL",
-        "question": "Hvor mange trappetrinn er det på pyramiden i Asker sentrum?",
+        "details": "Gå til Askerpyramiden på Bakerløkka",
+        "question": "Hvor mange trappetrinn er det opp til toppen?",
         "answers": [
             {
                 "id": "1",
@@ -234,7 +241,8 @@
     {
         "id": "8i675T",
         "type": "NORMAL",
-        "question": "Hvor mange røde postkasser er det utenfor Narvesen på togstasjonen?",
+        "details": "Gå til Narvesen på togstasjonen",
+        "question": "Hvor mange røde postkasser er det utenfor?",
         "answers": [
             {
                 "id": "1",
@@ -246,7 +254,8 @@
     {
         "id": "rB9W9E",
         "type": "NORMAL",
-        "question": "Hvilken bokstav er inngangen til politistasjonen merket med?",
+        "details": "Gå til politistasjonen",
+        "question": "Hvilken bokstav er inngangen merket med?",
         "answers": [
             {
                 "id": "1",
@@ -258,7 +267,8 @@
     {
         "id": "1bTK1Y",
         "type": "NORMAL",
-        "question": "På bygget ved siden av Ask, hvor mange trepaneler består veggen av?",
+        "details": "Gå til butikken Ask",
+        "question": "Hvor mange trepaneler består veggen av på bygget ved siden av?",
         "answers": [
             {
                 "id": "1",
