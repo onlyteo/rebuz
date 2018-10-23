@@ -18,6 +18,8 @@ exports.find = (event, team, handler) => {
                     event: item.event,
                     team: item.team,
                     question: item.question,
+                    tries: item.tries,
+                    status: item.status,
                     created: item.created,
                     modified: item.modified
                 };
@@ -30,11 +32,13 @@ exports.find = (event, team, handler) => {
 };
 
 exports.save = (stats, handler) => {
-    repository.get(stats, (err, result) => {
+    const query = { event: stats.event, team: stats.team, question: stats.question };
+    repository.get(query, (err, result) => {
         if (err) {
             handler(err, 0);
         } else if (result) {
-            repository.update(stats, (err, res) => {
+            const updateStats = { tries: result.tries + 1, status: stats.status };
+            repository.update(query, updateStats, (err, res) => {
                 if (err) {
                     handler(err, 0);
                 } else {
@@ -43,7 +47,8 @@ exports.save = (stats, handler) => {
                 }
             });
         } else {
-            repository.save(stats, (err) => {
+            const saveStats = { ...stats, tries: 1 };
+            repository.save(saveStats, (err) => {
                 if (err) {
                     handler(err, 0);
                 } else {

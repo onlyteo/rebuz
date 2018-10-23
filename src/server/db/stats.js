@@ -19,9 +19,9 @@ exports.save = (data, handler) => {
     stats.save(handler);
 }
 
-exports.update = (data, handler) => {
+exports.update = (query, data, handler) => {
     const timestamp = utils.epochSeconds();
-    Stats.updateOne(data, { modified: timestamp }, handler);
+    Stats.updateOne(query, { ...data, modified: timestamp }, handler);
 }
 
 exports.delete = (query, handler) => {

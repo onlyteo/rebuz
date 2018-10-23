@@ -7,6 +7,8 @@ let StatsSchema = new Schema({
     event: { type: String, required: true },
     team: { type: String, required: true },
     question: { type: String, required: true },
+    tries: { type: Number, required: true },
+    status: { type: String, required: true },
     created: { type: Number },
     modified: { type: Number }
 });

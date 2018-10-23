@@ -31,3 +31,7 @@ body {
 .header-link:hover {
   color: #000;
 }
+
+.low-key-text {
+  color: #bbb;
+}

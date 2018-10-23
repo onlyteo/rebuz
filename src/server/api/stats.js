@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     const { body } = req;
-    if (!body || !body.event || !body.team || !body.question) {
+    if (!body || !body.event || !body.team || !body.question || !body.status) {
         res.status(400).send();
     }
 

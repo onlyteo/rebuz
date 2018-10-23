@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Stats } from "../../models";
+import { Stats, StatsSave } from "../../models";
 
 export enum FindStatsActionType {
     LOADING = '[stats] FIND LOADING',
@@ -64,11 +64,10 @@ export function findStats(eventId: string) {
     }
 }
 
-export function saveStats(eventId: string, teamId: string, questionId: string) {
-    const body = { event: eventId, team: teamId, question: questionId };
+export function saveStats(statsSave: StatsSave) {
     return (dispatch) => {
         dispatch(saveStatsLoading(true));
-        return axios.post('/api/stats', body)
+        return axios.post('/api/stats', statsSave)
             .then((response) => {
                 return dispatch(saveStatsSuccess());
             })

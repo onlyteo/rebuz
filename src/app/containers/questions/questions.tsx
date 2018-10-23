@@ -5,7 +5,7 @@ import { CheckboxProps } from 'semantic-ui-react'
 import * as _ from 'lodash';
 
 import { NotificationMessage, LoadingIndicator } from '../../components';
-import { EventState, QuestionState, QuestionType, RootState, Team, TeamState } from "../../models";
+import { EventState, QuestionState, QuestionType, RootState, Team, TeamState, StatsSave, Status } from "../../models";
 import { getQuestion, saveStats } from '../../state/actions';
 import { QuestionsForm } from './questions-form';
 import { QuestionsSuccess } from './questions-success';
@@ -25,7 +25,7 @@ interface ComponentState {
 
 interface ComponentDispatchProps {
   getQuestion: (id: string) => Promise<any>;
-  saveStats: (eventId: string, teamId: string, questionId: string) => Promise<any>;
+  saveStats: (statsSave: StatsSave) => Promise<any>;
 }
 
 interface ComponentStateProps {
@@ -142,18 +142,14 @@ class Questions extends Component<ComponentProps, ComponentState> {
 
   private handleClick = (currentEventId: string, team: Team) => {
     const { currentQuestionId } = this.state;
-    const { history, eventState } = this.props;
-    const { events } = eventState;
-    const event = events[0];
+    const { history } = this.props;
 
     if (currentQuestionId && team) {
-      const { id: teamId, questions } = team;
-      const { id: eventId } = event;
+      const { questions } = team;
 
       const index = questions.indexOf(currentQuestionId);
       const nextIndex = index + 1;
       if (nextIndex < questions.length) {
-        this.props.saveStats(eventId, teamId, currentQuestionId);
         const nextId = questions[nextIndex];
         const path = `/event/${currentEventId}/question/${nextId}`;
         history.push(path);
@@ -185,11 +181,36 @@ class Questions extends Component<ComponentProps, ComponentState> {
     if (!formQuestionAnswer) {
       this.setFormError('No answer supplied');
     } else if (this.isCorrectAnswer()) {
-      const newState = { formSubmit: true, formWarning: false, formError: false }
-      this.setState(newState);
+      this.sendStats(Status.CORRECT);
+      this.setFormSuccess();
     } else {
+      this.sendStats(Status.INCORRECT);
       this.setFormWarning('Your answer is incorrect, try again');
     }
+  }
+
+  private sendStats = (status: Status) => {
+    const { currentQuestionId } = this.state;
+    const { match, eventState } = this.props;
+    const { eventId: teamId } = match.params;
+    const { events } = eventState;
+    const event = events[0];
+    const { id: eventId } = event;
+
+    if (currentQuestionId) {
+      const statsSave: StatsSave = {
+        event: eventId,
+        team: teamId,
+        question: currentQuestionId,
+        status: status
+      }
+      this.props.saveStats(statsSave);
+    }
+  }
+
+  private setFormSuccess = () => {
+    const newState = { formSubmit: true, formWarning: false, formError: false, formMessage: undefined }
+    this.setState(newState);
   }
 
   private setFormWarning = (message: string) => {
@@ -211,7 +232,7 @@ const mapStateToProps = (state: RootState): ComponentStateProps => ({
 
 const mapDispatchToProps = (dispatch): ComponentDispatchProps => ({
   getQuestion: (id: string) => dispatch(getQuestion(id)),
-  saveStats: (eventId: string, teamId: string, questionId: string) => dispatch(saveStats(eventId, teamId, questionId))
+  saveStats: (statsSave: StatsSave) => dispatch(saveStats(statsSave))
 });
 
 const QuestionsContainer = connect(mapStateToProps, mapDispatchToProps)(Questions);

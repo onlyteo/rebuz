@@ -56,15 +56,19 @@ class StatsResults extends Component<ComponentProps, ComponentState> {
     } else if (events && events.length && stats && stats.length && teams && teams.length) {
       const { openModal } = this.state;
       const statList = stats.map((stat) => {
-        const { team: teamId, question: questionId, created, modified } = stat;
+        const { team: teamId, question: questionId, tries, status, created, modified } = stat;
         const team = teamMap[teamId];
         const { name: teamName, questions } = team || { name: '', questions: [] };
         const questionNumber = questions.indexOf(questionId) + 1;
         const createdTimeString = timestampToString(created);
         const modifiedTimeString = timestampToString(modified);
         return {
+          teamId: teamId,
           teamName: teamName,
+          questionId: questionId,
           questionNumber: questionNumber,
+          numberOfTries: tries,
+          questionStatus: status,
           createdTime: createdTimeString,
           modifiedTime: modifiedTimeString
         };
@@ -85,17 +89,25 @@ class StatsResults extends Component<ComponentProps, ComponentState> {
               <Table.Row>
                 <Table.HeaderCell>Team</Table.HeaderCell>
                 <Table.HeaderCell>Question</Table.HeaderCell>
+                <Table.HeaderCell>Tries</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.HeaderCell>Created</Table.HeaderCell>
                 <Table.HeaderCell>Modified</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {statList.sort().map((stat, index) => {
-                const { teamName, questionNumber, createdTime, modifiedTime } = stat;
+                const { teamId, teamName, questionId, questionNumber, numberOfTries, questionStatus, createdTime, modifiedTime } = stat;
                 return (
                   <Table.Row key={index}>
-                    <Table.Cell>{teamName}</Table.Cell>
-                    <Table.Cell>{questionNumber}</Table.Cell>
+                    <Table.Cell>
+                      {teamName} <span className='low-key-text'>({teamId})</span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {questionNumber} <span className='low-key-text'>({questionId})</span>
+                    </Table.Cell>
+                    <Table.Cell>{numberOfTries}</Table.Cell>
+                    <Table.Cell>{questionStatus}</Table.Cell>
                     <Table.Cell>{createdTime}</Table.Cell>
                     <Table.Cell>{modifiedTime}</Table.Cell>
                   </Table.Row>
