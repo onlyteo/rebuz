@@ -1,5 +1,17 @@
 [
     {
+        "id": "r4FJ6G",
+        "type": "NORMAL",
+        "question": "I hvilket år flyttet Indra inn i Hagaløkkveien 26?",
+        "answers": [
+            {
+                "id": "1",
+                "answer": "2017"
+            }
+        ],
+        "answerId": "1"
+    },
+    {
         "id": "5oCnKZ",
         "type": "NORMAL",
         "details": "Gå til Meny",
@@ -39,7 +51,7 @@
     {
         "id": "9vr7DR",
         "type": "NORMAL",
-        "details": "Gå til lekeplassen ved Egon",
+        "details": "Gå til Egon",
         "question": "Hvor mange gule benker er det på lekeplassen?",
         "answers": [
             {
